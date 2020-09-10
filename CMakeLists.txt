@@ -1,0 +1,9 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+# Enable local module files
+Set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+
+ADD_SUBDIRECTORY(libinterface)
+ADD_SUBDIRECTORY(libicesl_interface)
+
+
