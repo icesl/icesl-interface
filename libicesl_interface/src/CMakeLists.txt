@@ -31,6 +31,7 @@ SET(ICESL_SOURCE
   IPluginEnvironment.h
   Localization.h
   Localization.cpp
+  EnumerableSettingsInterface.h
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})
