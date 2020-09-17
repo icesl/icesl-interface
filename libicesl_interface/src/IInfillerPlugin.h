@@ -1,8 +1,8 @@
 #pragma once
 
 #include "IPlugin.h"
+#include "IPath.h"
 
-#include <clipper.hpp>
 #include "EnumerableSettingsInterface.h"
 
 namespace IceSLInterface {
@@ -16,7 +16,10 @@ public:
   IInfillerPlugin() = default;
   ~IInfillerPlugin() override = default;
 
-  bool initialize(IPluginEnvironment &env) override {}
+  bool initialize(IPluginEnvironment &env) override 
+  {
+    return true;
+  }
 
   void setSettings(const EnumerableSettingsInterface* settings) { m_EnumerableSettings = settings; }
 
@@ -32,10 +35,13 @@ public:
   // called before each new slice
   virtual void prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_box, float height, int brush) = 0;
 
-  // called to generate the infill in a toolPathTree
-  virtual bool generateInfill(int id, float height_mm, int brush, const ClipperLib::Paths& surface, std::vector<ClipperLib::Paths>& fills) = 0;
+  // called to generate the infill in a surface
+  /// TODO: add boolean to indicate if order is to be preserved or not
+  /// TODO: clarify return boolean
+  virtual bool generateInfill(int id, float height_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IPath> >& fills) = 0;
 
-private:
+protected:
+
   //IceSLInterface:: @todo add namespace
   const EnumerableSettingsInterface* m_EnumerableSettings;
 };
