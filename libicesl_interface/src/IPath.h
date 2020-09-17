@@ -8,6 +8,15 @@ namespace IceSLInterface
 {
 
   /// \brief Interface to a path
+  /**
+   IceSL understands the following attributes:
+   - Path attributes
+     - "flow_multiplier"
+     - "speed_multiplier"
+   - Per-vertex attributes
+     - "flow_multiplier"
+     - "zoffset" (up/down from standard position)
+  */
   class IPath
   {
   public:
@@ -34,7 +43,7 @@ namespace IceSLInterface
     /// \brief returns the number of vertices in the path
     virtual int  getNumVertices() const = 0;
 
-    /// \brief returns the position of the i-th vertex in iinteger grid space
+    /// \brief returns the position of the i-th vertex in integer grid space
     virtual ClipperLib::IntPoint getVertexPos(int) const = 0;
 
     /// \brief returns the position of the i-th vertex in slice space

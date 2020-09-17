@@ -35,6 +35,7 @@ SET(ICESL_SOURCE
   IPath.h
   Path.h
   Path.cpp
+  ILayer.h
   # Plugins
   IInfillerPlugin.h
   )
