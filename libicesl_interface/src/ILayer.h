@@ -18,8 +18,6 @@ namespace IceSLInterface
      - build space is in mm, starts on bed at 0.0
      - world space is in mm, corresponds to the input part coordinate system
 
-     A path returns build space XY coordinates when queried with IPath::getVertexPos_mm
-
      IceSL provides the following attributes:
      - "is_spiral", != 0.0 if the layer is a spiral layer (auto-spiralize feature)
   */
