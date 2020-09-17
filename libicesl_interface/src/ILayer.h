@@ -18,6 +18,10 @@ namespace IceSLInterface
      - build space is in mm, starts on bed at 0.0
      - world space is in mm, corresponds to the input part coordinate system
 
+     The path vertices XY coordinate have to be translated into mm multiplying
+     by the integer grid scale factor xy_mm_per_int. After this, the coordinates
+     are in build space.
+
      IceSL provides the following attributes:
      - "is_spiral", != 0.0 if the layer is a spiral layer (auto-spiralize feature)
   */
