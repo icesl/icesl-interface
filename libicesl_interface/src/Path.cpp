@@ -45,14 +45,14 @@ int  Path::addPerVertexAttribute(const std::string& name)
 
 // --------------------------------------------------------
 
-int  Path::getNumVertices()
+int  Path::getNumVertices() const
 {
   return (int)m_Path.size();
 }
 
 // --------------------------------------------------------
 
-ClipperLib::IntPoint Path::getVertexPos(int idx)
+ClipperLib::IntPoint Path::getVertexPos(int idx) const
 {
   sl_assert(idx >= 0 && idx < (int)m_Path.size());
   return m_Path[idx];
@@ -60,7 +60,7 @@ ClipperLib::IntPoint Path::getVertexPos(int idx)
 
 // --------------------------------------------------------
 
-void Path::getPathAttributes(std::vector<std::string> &_attribs)
+void Path::getPathAttributes(std::vector<std::string> &_attribs) const
 {
   _attribs.clear();
   for (auto a : m_Attribs) {
@@ -70,7 +70,7 @@ void Path::getPathAttributes(std::vector<std::string> &_attribs)
 
 // --------------------------------------------------------
 
-int  Path::getPathAttributeIndex(const std::string &name)
+int  Path::getPathAttributeIndex(const std::string &name) const
 {
   auto A = m_Attribs.find(name);
   if (A == m_Attribs.end()) {
@@ -82,7 +82,7 @@ int  Path::getPathAttributeIndex(const std::string &name)
 
 // --------------------------------------------------------
 
-void Path::getPathAttributeValue(int idx, double &_v)
+void Path::getPathAttributeValue(int idx, double &_v) const
 {
   sl_assert(idx >= 0 && idx < (int)m_AttribValues.size());
   _v = m_AttribValues[idx];
@@ -98,7 +98,7 @@ void Path::setPathAttributeValue(int idx, double v)
 
 // --------------------------------------------------------
 
-void Path::getPerVertexAttributes(std::vector<std::string> &_attribs)
+void Path::getPerVertexAttributes(std::vector<std::string> &_attribs) const
 {
   _attribs.clear();
   for (auto a : m_PerVertexAttribs) {
@@ -108,7 +108,7 @@ void Path::getPerVertexAttributes(std::vector<std::string> &_attribs)
 
 // --------------------------------------------------------
 
-int  Path::getPerVertexAttributeIndex(const std::string &name)
+int  Path::getPerVertexAttributeIndex(const std::string &name) const
 {
   auto A = m_PerVertexAttribs.find(name);
   if (A == m_PerVertexAttribs.end()) {
@@ -120,7 +120,7 @@ int  Path::getPerVertexAttributeIndex(const std::string &name)
 
 // --------------------------------------------------------
 
-void Path::getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &_v)
+void Path::getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &_v) const
 {
   sl_assert(attrib_idx >= 0 && attrib_idx < (int)m_PerVertexAttribValues.size());
   sl_assert(vertex_idx >= 0 && vertex_idx < (int)m_Path.size());

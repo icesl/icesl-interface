@@ -42,35 +42,35 @@ namespace IceSLInterface
     int  addPerVertexAttribute(const std::string &) override;
 
     /// \brief returns the number of vertices in the path
-    int  getNumVertices() override;
+    int  getNumVertices() const override;
 
     /// \brief returns the position of the i-th vertex in iinteger grid space
-    ClipperLib::IntPoint getVertexPos(int) override;
+    ClipperLib::IntPoint getVertexPos(int) const override;
 
     /// \brief returns the position of the i-th vertex in slice space
     ///        Not implemented and not necessary
     v2f  getVertexPos_mm(int) { sl_assert(false); return v2f(); }
 
     /// \brief returns the path attributes names
-    void getPathAttributes(std::vector<std::string> &) override;
+    void getPathAttributes(std::vector<std::string> &) const override;
 
     /// \brief returns the index of the path attributes, -1 if unknown
-    int  getPathAttributeIndex(const std::string &) override;
+    int  getPathAttributeIndex(const std::string &) const override;
 
     /// \brief gets the value of the path attribute
-    void getPathAttributeValue(int, double &) override;
+    void getPathAttributeValue(int, double &) const override;
 
     /// \brief sets the value of the path attribute
     void setPathAttributeValue(int, double) override;
 
     /// \brief returns the per-vertex attributes names
-    void getPerVertexAttributes(std::vector<std::string> &) override;
+    void getPerVertexAttributes(std::vector<std::string> &) const override;
 
     /// \brief returns the index of the per-vertex attribute, -1 if unknown
-    int  getPerVertexAttributeIndex(const std::string &) override;
+    int  getPerVertexAttributeIndex(const std::string &) const override;
 
     /// \brief returns the value of the per-vertex attribute for the i-th vertex
-    void getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &) override;
+    void getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &) const override;
 
     /// \brief sets the value of the per-vertex attribute for the i-th vertex
     void setPerVertexAttributeValue(int attrib_idx, int vertex_idx, double) override;

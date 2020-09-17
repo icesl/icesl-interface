@@ -32,34 +32,34 @@ namespace IceSLInterface
     virtual int  addPerVertexAttribute(const std::string &) = 0;
 
     /// \brief returns the number of vertices in the path
-    virtual int  getNumVertices() = 0;
+    virtual int  getNumVertices() const = 0;
 
     /// \brief returns the position of the i-th vertex in iinteger grid space
-    virtual ClipperLib::IntPoint getVertexPos(int) = 0;
+    virtual ClipperLib::IntPoint getVertexPos(int) const = 0;
 
     /// \brief returns the position of the i-th vertex in slice space
-    virtual v2f  getVertexPos_mm(int) = 0;
+    virtual v2f  getVertexPos_mm(int) const = 0;
 
     /// \brief returns the path attributes names
-    virtual void getPathAttributes(std::vector<std::string> &) = 0;
+    virtual void getPathAttributes(std::vector<std::string> &) const = 0;
 
     /// \brief returns the index of the path attributes, -1 if unknown
-    virtual int  getPathAttributeIndex(const std::string &) = 0;
+    virtual int  getPathAttributeIndex(const std::string &) const = 0;
 
     /// \brief gets the value of the path attribute
-    virtual void getPathAttributeValue(int, double &) = 0;
+    virtual void getPathAttributeValue(int, double &) const = 0;
 
     /// \brief sets the value of the path attribute
     virtual void setPathAttributeValue(int, double) = 0;
 
     /// \brief returns the per-vertex attributes names
-    virtual void getPerVertexAttributes(std::vector<std::string> &) = 0;
+    virtual void getPerVertexAttributes(std::vector<std::string> &) const = 0;
 
     /// \brief returns the index of the per-vertex attribute, -1 if unknown
-    virtual int  getPerVertexAttributeIndex(const std::string &) = 0;
+    virtual int  getPerVertexAttributeIndex(const std::string &) const = 0;
 
     /// \brief returns the value of the per-vertex attribute for the i-th vertex
-    virtual void getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &) = 0;
+    virtual void getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &) const = 0;
 
     /// \brief sets the value of the per-vertex attribute for the i-th vertex
     virtual void setPerVertexAttributeValue(int attrib_idx, int vertex_idx, double) = 0;
