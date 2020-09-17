@@ -1,0 +1,139 @@
+// SL 2020-09-07
+#pragma once
+
+#include <Path.h>
+
+using namespace IceSLInterface;
+
+// --------------------------------------------------------
+
+bool Path::isCyclic() const
+{
+  return m_IsCyclic;
+}
+
+// --------------------------------------------------------
+
+void Path::createPath(const ClipperLib::Path& path, bool cyclic)
+{
+  sl_assert(path.size() > 1);
+  m_Path     = path;
+  m_IsCyclic = cyclic;
+}
+
+// --------------------------------------------------------
+
+int  Path::addPathAttribute(const std::string& name)
+{
+  int idx = (int)m_AttribValues.size();
+  m_AttribValues.push_back(0.0);
+  m_Attribs.insert(std::make_pair(name, idx));
+  return idx;
+}
+
+// --------------------------------------------------------
+
+int  Path::addPerVertexAttribute(const std::string& name)
+{
+  sl_assert(!m_Path.empty());
+  int idx = (int)m_PerVertexAttribValues.size();
+  m_PerVertexAttribValues.push_back(std::vector<double>());
+  m_PerVertexAttribValues.back().resize(m_Path.size(),0.0);
+  m_PerVertexAttribs.insert(std::make_pair(name, idx));
+  return idx;
+}
+
+// --------------------------------------------------------
+
+int  Path::getNumVertices()
+{
+  return (int)m_Path.size();
+}
+
+// --------------------------------------------------------
+
+ClipperLib::IntPoint Path::getVertexPos(int idx)
+{
+  sl_assert(idx >= 0 && idx < (int)m_Path.size());
+  return m_Path[idx];
+}
+
+// --------------------------------------------------------
+
+void Path::getPathAttributes(std::vector<std::string> &_attribs)
+{
+  _attribs.clear();
+  for (auto a : m_Attribs) {
+    _attribs.push_back(a.first);
+  }
+}
+
+// --------------------------------------------------------
+
+int  Path::getPathAttributeIndex(const std::string &name)
+{
+  auto A = m_Attribs.find(name);
+  if (A == m_Attribs.end()) {
+    return -1;
+  } else {
+    return A->second;
+  }
+}
+
+// --------------------------------------------------------
+
+void Path::getPathAttributeValue(int idx, double &_v)
+{
+  sl_assert(idx >= 0 && idx < (int)m_AttribValues.size());
+  _v = m_AttribValues[idx];
+}
+
+// --------------------------------------------------------
+
+void Path::setPathAttributeValue(int idx, double v)
+{
+  sl_assert(idx >= 0 && idx < (int)m_AttribValues.size());
+  m_AttribValues[idx] = v;
+}
+
+// --------------------------------------------------------
+
+void Path::getPerVertexAttributes(std::vector<std::string> &_attribs)
+{
+  _attribs.clear();
+  for (auto a : m_PerVertexAttribs) {
+    _attribs.push_back(a.first);
+  }
+}
+
+// --------------------------------------------------------
+
+int  Path::getPerVertexAttributeIndex(const std::string &name)
+{
+  auto A = m_PerVertexAttribs.find(name);
+  if (A == m_PerVertexAttribs.end()) {
+    return -1;
+  } else {
+    return A->second;
+  }
+}
+
+// --------------------------------------------------------
+
+void Path::getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &_v)
+{
+  sl_assert(attrib_idx >= 0 && attrib_idx < (int)m_PerVertexAttribValues.size());
+  sl_assert(vertex_idx >= 0 && vertex_idx < (int)m_Path.size());
+  _v = m_PerVertexAttribValues[attrib_idx][vertex_idx];
+}
+
+// --------------------------------------------------------
+
+void Path::setPerVertexAttributeValue(int attrib_idx, int vertex_idx, double v)
+{
+  sl_assert(attrib_idx >= 0 && attrib_idx < (int)m_PerVertexAttribValues.size());
+  sl_assert(vertex_idx >= 0 && vertex_idx < (int)m_Path.size());
+  m_PerVertexAttribValues[attrib_idx][vertex_idx] = v;
+}
+
+// --------------------------------------------------------

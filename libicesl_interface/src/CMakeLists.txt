@@ -33,6 +33,8 @@ SET(ICESL_SOURCE
   Localization.cpp
   EnumerableSettingsInterface.h
   IPath.h
+  Path.h
+  Path.cpp
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})

@@ -35,7 +35,7 @@ namespace IceSLInterface
     virtual int  getNumVertices() = 0;
 
     /// \brief returns the position of the i-th vertex in iinteger grid space
-    virtual ClipperLib::IntPoint getVertexPos() = 0;
+    virtual ClipperLib::IntPoint getVertexPos(int) = 0;
 
     /// \brief returns the position of the i-th vertex in slice space
     virtual v2f  getVertexPos_mm(int) = 0;
@@ -59,10 +59,10 @@ namespace IceSLInterface
     virtual int  getPerVertexAttributeIndex(const std::string &) = 0;
 
     /// \brief returns the value of the per-vertex attribute for the i-th vertex
-    virtual void getPerVertexAttributeValue(int, double &) = 0;
+    virtual void getPerVertexAttributeValue(int attrib_idx, int vertex_idx, double &) = 0;
 
     /// \brief sets the value of the per-vertex attribute for the i-th vertex
-    virtual void setPerVertexAttributeValue(int, double) = 0;
+    virtual void setPerVertexAttributeValue(int attrib_idx, int vertex_idx, double) = 0;
 
   };
 
