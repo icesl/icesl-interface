@@ -33,6 +33,7 @@ SET(ICESL_SOURCE
   Localization.cpp
   EnumerableSettingsInterface.h
   IPath.h
+  PathTypeBitField.h
   Path.h
   Path.cpp
   ILayer.h

@@ -14,6 +14,20 @@ bool Path::isCyclic() const
 
 // --------------------------------------------------------
 
+uint Path::getPathType() const
+{
+  return (uint)m_TypeBits;
+}
+
+// --------------------------------------------------------
+
+void Path::setPathType(uint bits)
+{
+  m_TypeBits = bits;
+}
+
+// --------------------------------------------------------
+
 void Path::createPath(const ClipperLib::Path& path, bool cyclic)
 {
   sl_assert(path.size() > 1);

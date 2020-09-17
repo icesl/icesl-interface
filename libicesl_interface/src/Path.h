@@ -14,7 +14,9 @@ namespace IceSLInterface
   protected:
 
     /// \brief is the path cylic?
-    bool             m_IsCyclic;
+    bool             m_IsCyclic = false;
+    /// \brief path type bitfield
+    uint             m_TypeBits = 0;
     /// \brief path outline
     ClipperLib::Path m_Path;
     /// \brief path attributes
@@ -31,6 +33,12 @@ namespace IceSLInterface
     /// \brief returns true if the path is cyclic
     bool isCyclic() const override;
 
+    /// \brief returns the path type bitfield
+    uint getPathType() const override;
+
+    /// \brief sets the path type bitfield
+    void setPathType(uint) override;
+
     /// \brief initialized a path, where cyclic indicates if the path is open or close
     /// must be called before any per-vertex operation is performed
     void createPath(const ClipperLib::Path &path, bool cyclic) override;
@@ -46,10 +54,6 @@ namespace IceSLInterface
 
     /// \brief returns the position of the i-th vertex in iinteger grid space
     ClipperLib::IntPoint getVertexPos(int) const override;
-
-    /// \brief returns the position of the i-th vertex in slice space
-    ///        Not implemented and not necessary
-    v2f  getVertexPos_mm(int) { sl_assert(false); return v2f(); }
 
     /// \brief returns the path attributes names
     void getPathAttributes(std::vector<std::string> &) const override;

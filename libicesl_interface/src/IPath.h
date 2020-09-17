@@ -10,12 +10,15 @@ namespace IceSLInterface
   /// \brief Interface to a path
   /**
    IceSL understands the following attributes:
+   
    - Path attributes
      - "flow_multiplier"
      - "speed_multiplier"
+
    - Per-vertex attributes
      - "flow_multiplier"
      - "zoffset" (up/down from standard position)
+
   */
   class IPath
   {
@@ -29,6 +32,12 @@ namespace IceSLInterface
 
     /// \brief returns true if the path is cyclic
     virtual bool isCyclic() const = 0;
+
+    /// \brief returns the path type bitfield
+    virtual uint getPathType() const = 0;
+
+    /// \brief sets the path type bitfield
+    virtual void setPathType(uint) = 0;
 
     /// \brief initialized a path, where cyclic indicates if the path is open or close
     /// must be called before any per-vertex operation is performed
@@ -45,9 +54,6 @@ namespace IceSLInterface
 
     /// \brief returns the position of the i-th vertex in integer grid space
     virtual ClipperLib::IntPoint getVertexPos(int) const = 0;
-
-    /// \brief returns the position of the i-th vertex in slice space
-    virtual v2f  getVertexPos_mm(int) const = 0;
 
     /// \brief returns the path attributes names
     virtual void getPathAttributes(std::vector<std::string> &) const = 0;
