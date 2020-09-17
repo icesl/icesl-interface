@@ -50,6 +50,7 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(icesl_interface
   libinterface
+  clipper
 )
 
 IF(NOT EMSCRIPTEN)
