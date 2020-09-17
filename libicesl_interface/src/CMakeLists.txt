@@ -35,6 +35,7 @@ SET(ICESL_SOURCE
   IPath.h
   Path.h
   Path.cpp
+  ILayer.h
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})
