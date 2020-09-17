@@ -14,7 +14,8 @@
 #include <map>
 #include <vector>
 
-// -----------------------------------------------
+namespace IceSLInterface
+{
 
 class Localization
 {
@@ -107,6 +108,6 @@ private:
 };
 
 //#undef TR
-#define TR(str) StaticLocalization::getTranslation(str)
+#define TR(str) IceSLInterface::StaticLocalization::getTranslation(str)
 
-// -----------------------------------------------
+}

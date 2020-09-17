@@ -4,6 +4,9 @@
 #include <LibSL/LibSL.h>
 #include <string>
 
+namespace IceSLInterface
+{
+
 /**
  * @brief The EnumerableSettingsInterface class is used
  * to access printing settings from plugins.
@@ -51,3 +54,5 @@ public:
   /// @todo clean the list of parameters
   virtual std::unique_ptr<SettingInterface> getSettingByName(const std::string& internalName) const = 0;
 };
+
+}

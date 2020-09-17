@@ -6,12 +6,11 @@
 
 #include "IPlugin.h"
 
-// ----------------------------------------------------------------------------
+namespace IceSLInterface
+{
 
 //class IPlugin;
 class IPluginEnvironment;
-
-// ----------------------------------------------------------------------------
 
 /**
  * @brief The DynamicLinker class store IPlugin objects corresponding
@@ -62,5 +61,4 @@ private:
   
 };
 
-// ----------------------------------------------------------------------------
-
+}

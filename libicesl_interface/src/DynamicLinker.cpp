@@ -18,6 +18,8 @@
 namespace fs = std::filesystem;
 #endif
 
+using namespace IceSLInterface;
+
 // ----------------------------------------------------------------------------
 
 const std::string DynamicLinker::s_PluginFolder = "icesl-plugins";

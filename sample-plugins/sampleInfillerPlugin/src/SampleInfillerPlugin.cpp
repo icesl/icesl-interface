@@ -3,7 +3,7 @@
 
 // -----------------------------------------------
 
-IPlugin* createPlugin()
+IceSLInterface::IPlugin* createPlugin()
 {
   return new SampleInfillerPlugin();
 }

@@ -6,6 +6,9 @@
 
 #include "glux.h"
 
+namespace IceSLInterface
+{
+
 class IPlugin : public IInterface
 {
 public:
@@ -42,3 +45,5 @@ typedef IPlugin*(* CREATEPLUGINFUNC)();
 // DO NOT use virtual inheritance (e.g., DerivedClass : public virtual BaseClass)
 // when using DerivedClass from a DLL. This renders the DerivedClass virtual
 // function table inconsistent and will most likely cause a segmentation fault.
+
+}

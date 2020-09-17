@@ -5,7 +5,7 @@
 
 // -----------------------------------------------
 
-extern "C" ICESL_PLUGIN_API IPlugin * createPlugin();
+extern "C" ICESL_PLUGIN_API IceSLInterface::IPlugin * createPlugin();
 
 // -----------------------------------------------
 
@@ -17,7 +17,7 @@ public:
   SampleInfillerPlugin() = default;
   virtual ~SampleInfillerPlugin() = default;
 
-  bool initialize(IPluginEnvironment &env) override {
+  bool initialize(IceSLInterface::IPluginEnvironment &env) override {
     IInfillerPlugin::initialize(env);
     gluxInit();
     return true;

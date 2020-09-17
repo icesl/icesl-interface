@@ -5,7 +5,8 @@
 
 #include "EnumerableSettingsInterface.h"
 
-namespace IceSLInterface {
+namespace IceSLInterface
+{
 
 /**
  * @brief The IPluginInfiller class
