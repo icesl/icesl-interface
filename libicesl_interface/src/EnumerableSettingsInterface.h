@@ -46,7 +46,8 @@ public:
 public:
   virtual ~EnumerableSettingsInterface() = default;
 
-  /// \brief get a setting from its internal name, see @todo for the list of internal names.
+  /// \brief get a setting from its internal name, see https://icesl.loria.fr/parameters/ for the list of internal names.
   /// A null pointer is returned if the setting does not exist.
+  /// @todo clean the list of parameters
   virtual std::unique_ptr<SettingInterface> getSettingByName(const std::string& internalName) const = 0;
 };

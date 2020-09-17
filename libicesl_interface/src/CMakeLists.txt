@@ -35,6 +35,8 @@ SET(ICESL_SOURCE
   IPath.h
   Path.h
   Path.cpp
+  # Plugins
+  IInfillerPlugin.h
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})
