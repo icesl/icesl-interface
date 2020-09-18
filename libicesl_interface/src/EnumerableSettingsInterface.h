@@ -8,8 +8,8 @@ namespace IceSLInterface
 {
 
 /**
- * @brief The EnumerableSettingsInterface class is used
- * to access printing settings from plugins.
+ * @brief The EnumerableSettingsInterface class is used to access
+ * printing settings from plugins.
  */
 class EnumerableSettingsInterface
 {

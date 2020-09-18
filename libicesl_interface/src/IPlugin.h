@@ -9,20 +9,29 @@
 namespace IceSLInterface
 {
 
+/**
+ * @brief The IPlugin class is the common interface to all plugins, it contains
+ * function for initialization and cleaning of resources.
+ */
 class IPlugin : public IInterface
 {
 public:
   IPlugin() = default;
   virtual ~IPlugin() = default;
 
-  // Return true if initialization is successful, false otherwise. If false, IceSL will not use the plugin.
+  /// \brief initialize the plugin, return true if initialization is successful, false otherwise.
+  /// If false, IceSL will not use the plugin.
+  /// @warning the implementation of this function should call gluxInit() !
   virtual bool initialize(IPluginEnvironment &env) = 0;
 
-  // Perform some cleanup here, if needed.
+  /// \brief Perform some cleanup here, if needed.
   virtual void dispose() = 0;
 
+  /// \brief return the name of the plugin
   virtual std::string name() const = 0;
+  /// \brief return the authors of the plugin
   virtual std::string author() const = 0;
+  /// \brief return a description of the plugin
   virtual std::string comment() const = 0;
 };
 

@@ -1,7 +1,6 @@
 #include "DynamicLinker.h"
 
 #include "IPlugin.h"
-#include "IPluginEnvironment.h"
 
 #include <LibSL/System/System.h>
 #include <iostream>
@@ -143,7 +142,6 @@ bool DynamicLinker::loadPlugins()
 #endif
 
   // TODO add mechanism to perform user checks on what plugins should be loaded
-  // typically a list of checkbox
   for (const std::string &f : pluginsToLoad) {
 
 #ifdef WIN32

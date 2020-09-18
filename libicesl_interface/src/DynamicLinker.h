@@ -5,12 +5,10 @@
 #include <string>
 
 #include "IPlugin.h"
+#include "IPluginEnvironment.h"
 
 namespace IceSLInterface
 {
-
-//class IPlugin;
-class IPluginEnvironment;
 
 /**
  * @brief The DynamicLinker class store IPlugin objects corresponding
@@ -40,8 +38,7 @@ public:
     }
   }
 
-  /** Call functor function on the plugins deriving from TPluginFilter
-   */
+  /// \brief  Call functor function on the plugins deriving from TPluginFilter
   template<typename TPluginFilter, typename TFunctor>
   void processPlugins(TFunctor &&functor) const {
     for (auto & pPlugin : m_Plugins) {

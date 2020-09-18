@@ -8,34 +8,28 @@
 namespace IceSLInterface
 {
 
-//// {EB4BE774-A86A-43ed-8AD3-D7A3C36A5776}
-//ITF_GUID(Itf_IPluginEnvironment,
-//  0xeb4be774, 0xa86a, 0x43ed, 0x8a, 0xd3, 0xd7, 0xa3, 0xc3, 0x6a, 0x57, 0x76);
-
 // ----------------------------------------------------------------
 
+/**
+ * @brief The IPluginEnvironment class is used to share environment for plugins.
+ * This is typically used to provide acces to global static variable in the DLL scope.
+ * This can includes localization informations, access to ImGUI for GUI management, ...
+ */
 class IPluginEnvironment : public IInterface
 {
 public:
   IPluginEnvironment() = default;
   ~IPluginEnvironment() override = default;
 
-  IInterface *cast(const UniqueID *id) override
-  {
-    return nullptr; //TODO
-  //  if (IsEqualUniqueID(*id, Itf_IInterface) || IsEqualUniqueID(*id, Itf_IPluginEnvironment))
-  //    return static_cast<IPluginEnvironment*>(this);
-  //  else
-  //    return NULL;
-  }
+  /// @todo if IInterface is kept, implement
+  IInterface *cast(const UniqueID *id) override {  return nullptr;  }
 };
 
 // ----------------------------------------------------------------
 
-//// {EB4BE774-A86A-43ed-8AD3-D7A3C36A5776}
-//ITF_GUID(Itf_ILocalizationEnvironment,
-//  0xeb4be774, 0xa86a, 0x43ed, 0x8a, 0xd3, 0xd7, 0xa3, 0xc3, 0x6a, 0x57, 0x76);
-
+/**
+ * \brief Plugin environment for managing translation.
+ */
 class ILocalizationEnvironment : public virtual IPluginEnvironment
 {
 public:
@@ -45,19 +39,15 @@ public:
 
   ~ILocalizationEnvironment() override = default;
 
-  IInterface *cast(const UniqueID *id) override
-  {
-    return nullptr; //TODO
-  //  if (IsEqualUniqueID(*id, Itf_IInterface) || IsEqualUniqueID(*id, Itf_ILocalizationEnvironment))
-  //    return static_cast<ILocalizationEnvironment*>(this);
-  //  else
-  //    return NULL;
-  }
+  /// @todo if IInterface is kept, implement
+  IInterface *cast(const UniqueID *id) override {  return nullptr;  }
 
 protected:
   Localization* m_Localization;
 };
 
+/** \brief Plugin environment for managing GUI through IMGUI library.
+ */
 class IImGuiEnvironment : public virtual IPluginEnvironment
 {
 public:
@@ -67,19 +57,10 @@ public:
 
   ~IImGuiEnvironment() override = default;
 
-  IInterface *cast(const UniqueID *id) override
-  {
-    return nullptr; //TODO
-  //  if (IsEqualUniqueID(*id, Itf_IInterface) || IsEqualUniqueID(*id, Itf_ILocalizationEnvironment))
-  //    return static_cast<ILocalizationEnvironment*>(this);
-  //  else
-  //    return NULL;
-  }
+  /// @todo if IInterface is kept, implement
+  IInterface *cast(const UniqueID *id) override {  return nullptr;  }
 
-  ImGuiContext* getImGuiContext()
-  {
-    return m_ImGuiContext;
-  }
+  ImGuiContext* getImGuiContext() {   return m_ImGuiContext;  }
 
 protected:
   ImGuiContext* m_ImGuiContext;
