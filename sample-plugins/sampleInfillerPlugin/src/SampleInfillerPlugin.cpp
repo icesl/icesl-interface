@@ -47,7 +47,12 @@ void SampleInfillerPlugin::prepareInfillForSlice(int id, const AAB<2, int>& xy_s
 
 bool SampleInfillerPlugin::generateInfill(int id, float height_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills)
 {
-  // this sample generates a simple concentric fill
+  /// This sample generates a simple concentric fill.
+  //
+  // => Note that this is a naive approach resulting in overfill,
+  //    just used here for illustration.
+  //
+  /// retrieve nozzle diameter
   float nozzle_diameter = 0.0f;
   {
     auto s = m_EnumerableSettings->getSettingByName("nozzle_diameter_mm_0");
@@ -56,29 +61,31 @@ bool SampleInfillerPlugin::generateInfill(int id, float height_mm, int brush, co
     }
     s->getValue(nozzle_diameter);
   }
+  /// retrieve processing scale factor
   float xy_mm_per_int = 0.0f;
   {
-    auto s = m_EnumerableSettings->getSettingByName("xy_mm_per_pixels");
+    auto s = m_EnumerableSettings->getSettingByName("xy_mm_per_int");
     if (s == nullptr) {
       throw Fatal("Missing setting");
     }
     s->getValue(xy_mm_per_int);
   }
-  // now generate paths
+  /// generate paths
   float radius = nozzle_diameter / 2.0f;
   ClipperLib::Paths current = surface;
   while (1) {
     ClipperLib::ClipperOffset offseter;
     offseter.AddPaths(current, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
     ClipperLib::Paths contours;
-    offseter.Execute(contours, - 10.0f * radius / xy_mm_per_int);
+    offseter.Execute(contours, - radius / xy_mm_per_int);
     // next uses nozzle diameter as spacing
     radius = nozzle_diameter;
     // if result of offset is empty stop
     if (contours.empty()) {
       break;
     }
-    // add paths
+    /// Add paths to output vector
+    ClipperLib::CleanPolygons(contours);
     for (const auto &cnt : contours) {
       fills.push_back(std::unique_ptr<IceSLInterface::IPath>(new IceSLInterface::Path()));
       fills.back()->createPath(cnt, true);

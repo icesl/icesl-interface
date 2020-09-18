@@ -49,12 +49,7 @@ namespace IceSLInterface
     /// \param height_mm altitude of the layer bottm in mm, build space (starts at 0.0)
     /// \param brush the brush for which the infiller is called
     /// \param surface the geometric outline of the area to be filled
-    /// \param fills the vector to be filled with passes.
-    ///
-    /// Note that fills is a vector of Paths. Each vector entry correspond to a pass of printing infill
-    /// paths. For instance, an infill producing a crossed hatch pattern will have two sets of Paths, the
-    /// first for the horizontal pass, the second for the vertical pass. The first entry in the vector
-    /// always prints before the second entry, and so on.
+    /// \param fills the vector to be filled with paths.
     ///
     /// The method returns true if a infill was produced, false if the infill should be replaced
     /// by a dense infill using IceSL built-in infiller.
