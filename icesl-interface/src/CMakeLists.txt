@@ -25,14 +25,10 @@ IF(ICESL_USE_PLUGINS AND NOT EMSCRIPTEN)
 ENDIF()
 
 SET(ICESL_SOURCE
-  DynamicLinker.h
-  DynamicLinker.cpp
   UniqueID.h
   UniqueID.cpp
   IPlugin.h
   IPluginEnvironment.h
-  Localization.h
-  Localization.cpp
   EnumerableSettingsInterface.h
   IPath.h
   PathTypeBitField.h

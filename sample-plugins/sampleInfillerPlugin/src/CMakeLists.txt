@@ -30,7 +30,7 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(sampleInfillerPlugin
   LibSL
-  libicesl_interface
+  icesl_interface
 )
 
 SET_PROPERTY(TARGET sampleInfillerPlugin APPEND PROPERTY
