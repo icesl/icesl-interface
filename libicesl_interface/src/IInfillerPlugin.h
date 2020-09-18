@@ -14,17 +14,25 @@ namespace IceSLInterface
   class IInfillerPlugin : public IPlugin
   {
   public:
+    /// \brief Constructor
     IInfillerPlugin() = default;
+    /// \brief Desstructor
     ~IInfillerPlugin() override = default;
 
+    /// \brief Called upon plugin initialization
     bool initialize(IPluginEnvironment &env) override
     {
       return true;
     }
 
+    /// \brief Caller sets the enumerable settings (all print settings can be accessed through this interface)
     void setSettings(const EnumerableSettingsInterface *settings) { m_EnumerableSettings = settings; }
 
+    /// \brief Caller sets the total number of slices, before any path is generated
     virtual void setNumSlices(int num) = 0;
+
+    /// \brief Caller sets the world space information, before any path is generated
+    /// This allows to go from build space to world space, for intance to query per-layer or field parameters.
     virtual void setWorldSpace(v3f world_corner_mm, v3f extent_mm) = 0;
 
     /// \brief Called when the infill is about to be used for a brush, prior to path generation
