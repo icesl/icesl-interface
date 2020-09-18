@@ -9,6 +9,10 @@ namespace IceSLInterface
 
   /// \brief Interface to a path
   /**
+
+   NOTE: to simplify processing cylic paths must have first point == last point
+         this is different from ClipperLib where the last segment is implicit
+
    IceSL understands the following attributes:
    
    - Path attributes
