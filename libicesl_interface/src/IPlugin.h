@@ -13,7 +13,7 @@ namespace IceSLInterface
  * @brief The IPlugin class is the common interface to all plugins, it contains
  * function for initialization and cleaning of resources.
  */
-class IPlugin : public IInterface
+class IPlugin
 {
 public:
   IPlugin() = default;

@@ -10,13 +10,6 @@ IceSLInterface::IPlugin* createPlugin()
 
 // -----------------------------------------------
 
-IInterface *SampleInfillerPlugin::cast(const UniqueID *id)
-{
-  return nullptr; 
-}
-
-// -----------------------------------------------
-
 void SampleInfillerPlugin::setNumSlices(int num)
 {
 
