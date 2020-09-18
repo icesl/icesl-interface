@@ -28,8 +28,6 @@ public:
   std::string author() const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
   std::string comment() const override { return "Example for infiller plugins"; }
 
-  IInterface *cast(const UniqueID *id) override;
-
   void setNumSlices(int num) override;
   void setWorldSpace(v3f world_corner_mm, v3f extent_mm) override;
 

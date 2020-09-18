@@ -15,14 +15,11 @@ namespace IceSLInterface
  * This is typically used to provide acces to global static variable in the DLL scope.
  * This can includes localization informations, access to ImGUI for GUI management, ...
  */
-class IPluginEnvironment : public IInterface
+class IPluginEnvironment
 {
 public:
   IPluginEnvironment() = default;
-  ~IPluginEnvironment() override = default;
-
-  /// @todo if IInterface is kept, implement
-  IInterface *cast(const UniqueID *id) override {  return nullptr;  }
+  virtual ~IPluginEnvironment() = default;
 };
 
 // ----------------------------------------------------------------
@@ -39,9 +36,6 @@ public:
 
   ~ILocalizationEnvironment() override = default;
 
-  /// @todo if IInterface is kept, implement
-  IInterface *cast(const UniqueID *id) override {  return nullptr;  }
-
 protected:
   Localization* m_Localization;
 };
@@ -56,9 +50,6 @@ public:
   {}
 
   ~IImGuiEnvironment() override = default;
-
-  /// @todo if IInterface is kept, implement
-  IInterface *cast(const UniqueID *id) override {  return nullptr;  }
 
   ImGuiContext* getImGuiContext() {   return m_ImGuiContext;  }
 
