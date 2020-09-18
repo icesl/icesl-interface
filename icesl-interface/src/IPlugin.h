@@ -1,7 +1,5 @@
 #pragma once
 
-#include "IInterface.h"
-
 #include "IPluginEnvironment.h"
 
 #include "glux.h"

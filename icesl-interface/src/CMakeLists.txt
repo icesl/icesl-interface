@@ -27,6 +27,8 @@ ENDIF()
 SET(ICESL_SOURCE
   DynamicLinker.h
   DynamicLinker.cpp
+  UniqueID.h
+  UniqueID.cpp
   IPlugin.h
   IPluginEnvironment.h
   Localization.h
@@ -55,7 +57,6 @@ ELSE(EMSCRIPTEN)
 ENDIF()
 
 TARGET_LINK_LIBRARIES(icesl_interface
-  libinterface
   clipper
 )
 
@@ -64,7 +65,6 @@ IF(ICESL_USE_CXX17)
 IF(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
   TARGET_LINK_LIBRARIES( icesl_interface
     stdc++fs
-#      c++fs c++abi
   )
 ENDIF()
 ENDIF()

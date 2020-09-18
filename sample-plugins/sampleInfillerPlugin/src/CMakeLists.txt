@@ -22,9 +22,8 @@ ADD_LIBRARY(sampleInfillerPlugin MODULE
 
 IF(NOT EMSCRIPTEN)
 IF(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-  TARGET_LINK_LIBRARIES( sampleInfillerPlugin
+  TARGET_LINK_LIBRARIES(sampleInfillerPlugin
     stdc++fs
-#      c++fs c++abi
   )
 ENDIF()
 ENDIF()
@@ -33,15 +32,6 @@ TARGET_LINK_LIBRARIES(sampleInfillerPlugin
   LibSL
   libicesl_interface
 )
-
-IF(NOT EMSCRIPTEN)
-  IF(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    TARGET_LINK_LIBRARIES( sampleInfillerPlugin
-      stdc++fs
-  #    c++fs c++abi
-    )
-  ENDIF()
-ENDIF()
 
 SET_PROPERTY(TARGET sampleInfillerPlugin APPEND PROPERTY
    INTERFACE_INCLUDE_DIRECTORIES
