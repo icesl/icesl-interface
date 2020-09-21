@@ -31,6 +31,7 @@ public:
   virtual std::string author() const = 0;
   /// \brief return a description of the plugin
   virtual std::string comment() const = 0;
+
 };
 
 #ifdef WIN32
@@ -39,18 +40,33 @@ public:
 #define ICESL_PLUGIN_API __attribute__((visibility("default")))
 #endif
 
-/// Signature of the function required to create the IPlugin object in
-/// the dynamic library providing the plugin
 #ifdef WIN32
 typedef IPlugin*(__cdecl * CREATEPLUGINFUNC)();
+typedef void (__cdecl * DESTROYPLUGINFUNC)(IPlugin*);
 #else
 typedef IPlugin*(* CREATEPLUGINFUNC)();
+typedef void (* DESTROYPLUGINFUNC)(IPlugin*);
 #endif
+/// Signatures of the functions required to create and destroy
+/// the IPlugin object from the host application, typically defined as
+///    MyPlugin.h
+///       extern "C" ICESL_PLUGIN_API IceSLInterface::IPlugin * createPlugin();
+///       extern "C" ICESL_PLUGIN_API void destroyPlugin(IceSLInterface::IPlugin* plugin);
+///    MyPlugin.cpp
+///       IceSLInterface::IPlugin* createPlugin()
+///       {
+///         return new MyPlugin();
+///       }
+///       void destroyPlugin(IceSLInterface::IPlugin* plugin)
+///       {
+///         delete plugin;
+///       }
 
 // SP and CZ: 2019-09-27: 
 // IMPORTANT!!!
 // DO NOT use virtual inheritance (e.g., DerivedClass : public virtual BaseClass)
 // when using DerivedClass from a DLL. This renders the DerivedClass virtual
 // function table inconsistent and will most likely cause a segmentation fault.
+
 
 }
