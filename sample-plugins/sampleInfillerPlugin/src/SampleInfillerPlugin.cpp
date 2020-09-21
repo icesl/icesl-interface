@@ -8,6 +8,11 @@ IceSLInterface::IPlugin* createPlugin()
   return new SampleInfillerPlugin();
 }
 
+void destroyPlugin(IceSLInterface::IPlugin* plugin)
+{
+  delete plugin;
+}
+
 // -----------------------------------------------
 
 void SampleInfiller::setNumSlices(int num)

@@ -7,6 +7,8 @@
 
 extern "C" ICESL_PLUGIN_API IceSLInterface::IPlugin * createPlugin();
 
+extern "C" ICESL_PLUGIN_API void destroyPlugin(IceSLInterface::IPlugin* plugin);
+
 // -----------------------------------------------
 
 class SampleInfiller : public IceSLInterface::IInfillerInterface
