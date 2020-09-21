@@ -51,12 +51,10 @@ public:
   std::string author() const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
   std::string comment() const override { return "Example for infiller plugins"; }
 
-  static std::unique_ptr<IInfillerInterface> infillerBuilder ()
+  std::unique_ptr<IInfillerInterface> createInfiller () const override
   {
      return std::unique_ptr<SampleInfiller>(new SampleInfiller());
   }
-
-  std::pair<std::string,InfillerBuilderFunction> getInfillerBuilder() override;
 };
 
 // -----------------------------------------------

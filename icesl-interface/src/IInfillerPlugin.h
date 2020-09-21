@@ -77,7 +77,7 @@ namespace IceSLInterface
       return true;
     }
 
-    virtual std::pair<std::string,InfillerBuilderFunction> getInfillerBuilder() = 0;
+    virtual std::unique_ptr<IInfillerInterface> createInfiller() const = 0;
   };
 
 }

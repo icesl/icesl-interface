@@ -98,9 +98,3 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
 
 // -----------------------------------------------
  
-auto SampleInfillerPlugin::getInfillerBuilder() -> std::pair<std::string,InfillerBuilderFunction>
-{
-  return std::make_pair(name(), SampleInfillerPlugin::infillerBuilder);
-}
-
-// -----------------------------------------------
