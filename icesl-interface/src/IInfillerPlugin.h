@@ -8,22 +8,13 @@
 namespace IceSLInterface
 {
 
-  /**
-   * @brief The IPluginInfiller class
-   */
-  class IInfillerPlugin : public IPlugin
+  class IInfillerInterface
   {
   public:
     /// \brief Constructor
-    IInfillerPlugin() = default;
+    IInfillerInterface() = default;
     /// \brief Desstructor
-    ~IInfillerPlugin() override = default;
-
-    /// \brief Called upon plugin initialization
-    bool initialize(IPluginEnvironment &env) override
-    {
-      return true;
-    }
+    virtual ~IInfillerInterface() = default;
 
     /// \brief Caller sets the enumerable settings (all print settings can be accessed through this interface)
     void setSettings(const EnumerableSettingsInterface *settings) { m_EnumerableSettings = settings; }
@@ -63,8 +54,30 @@ namespace IceSLInterface
 
   protected:
 
-    //IceSLInterface:: @todo add namespace
     const EnumerableSettingsInterface *m_EnumerableSettings;
+  };
+
+  /**
+   * @brief The IPluginInfiller class
+   */
+  class IInfillerPlugin : public IPlugin
+  {
+  public:
+    /// \brief signature of function pointer used to create an implementaiton of IInfillerInterface
+    using InfillerBuilderFunction = std::unique_ptr<IInfillerInterface> (*) ();
+
+    /// \brief Constructor
+    IInfillerPlugin() = default;
+    /// \brief Desstructor
+    ~IInfillerPlugin() override = default;
+
+    /// \brief Called upon plugin initialization
+    bool initialize(IPluginEnvironment &env) override
+    {
+      return true;
+    }
+
+    virtual std::pair<std::string,InfillerBuilderFunction> getInfillerBuilder() = 0;
   };
 
 }

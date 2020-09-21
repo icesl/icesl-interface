@@ -10,42 +10,42 @@ IceSLInterface::IPlugin* createPlugin()
 
 // -----------------------------------------------
 
-void SampleInfillerPlugin::setNumSlices(int num)
+void SampleInfiller::setNumSlices(int num)
 {
 
 }
 
 // -----------------------------------------------
 
-void SampleInfillerPlugin::setWorldSpace(v3f world_corner_mm, v3f extent_mm)
+void SampleInfiller::setWorldSpace(v3f world_corner_mm, v3f extent_mm)
 {
 
 }
 
 // -----------------------------------------------
 
-void SampleInfillerPlugin::prepareInfill(int brush)
+void SampleInfiller::prepareInfill(int brush)
 {
 
 }
 
 // -----------------------------------------------
 
-void SampleInfillerPlugin::terminateInfill(int brush)
+void SampleInfiller::terminateInfill(int brush)
 {
 
 }
 
 // -----------------------------------------------
 
-void SampleInfillerPlugin::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_box, float height, int brush)
+void SampleInfiller::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_box, float height, int brush)
 {
 
 }
 
 // ----------------------------------------------- 
 
-bool SampleInfillerPlugin::generateInfill(int id, float height_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills)
+bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills)
 {
   /// This sample generates a simple concentric fill.
   //
@@ -98,3 +98,9 @@ bool SampleInfillerPlugin::generateInfill(int id, float height_mm, int brush, co
 
 // -----------------------------------------------
  
+auto SampleInfillerPlugin::getInfillerBuilder() -> std::pair<std::string,InfillerBuilderFunction>
+{
+  return std::make_pair(name(), SampleInfillerPlugin::infillerBuilder);
+}
+
+// -----------------------------------------------
