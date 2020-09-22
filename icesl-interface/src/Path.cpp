@@ -31,9 +31,11 @@ void Path::setPathType(uint bits)
 void Path::createPath(const ClipperLib::Path& path, bool cyclic)
 {
   sl_assert(path.size() > 1);
-  m_Path     = path;
-  m_Path.push_back(m_Path.front());
   m_IsCyclic = cyclic;
+  m_Path     = path;
+  if (cyclic) {
+    m_Path.push_back(m_Path.front());
+  }
 }
 
 // --------------------------------------------------------

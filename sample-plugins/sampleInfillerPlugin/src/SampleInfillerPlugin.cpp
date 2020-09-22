@@ -93,7 +93,9 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
     ClipperLib::CleanPolygons(contours);
     for (const auto &cnt : contours) {
       fills.push_back(std::unique_ptr<IceSLInterface::IPath>(new IceSLInterface::Path()));
-      fills.back()->createPath(cnt, true);
+      if (cnt.size() > 0) {
+        fills.back()->createPath(cnt, true);
+      }
     }
     // next
     current = contours;
@@ -103,3 +105,9 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
 
 // -----------------------------------------------
  
+bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) const
+{
+  return true;
+}
+
+// -----------------------------------------------
