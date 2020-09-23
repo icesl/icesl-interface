@@ -6,8 +6,7 @@
 
 namespace IceSLInterface
 {
-
-static const std::string gInterfaceVersion = "0.2";
+  extern const std::string InterfaceVersion;
 
 /**
  * @brief The IPlugin class is the common interface to all plugins, it contains
@@ -34,7 +33,11 @@ public:
   /// \brief return a description of the plugin
   virtual std::string comment() const = 0;
 
-  const std::string  interfaceVersion() const { return gInterfaceVersion; }
+  /// \brief get the interface version used in the plugin
+  const std::string& interfaceVersion() { return m_InterfaceVersion; }
+
+private:
+  const std::string m_InterfaceVersion = InterfaceVersion;
 };
 
 #ifdef WIN32

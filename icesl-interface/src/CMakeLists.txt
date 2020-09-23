@@ -28,6 +28,7 @@ SET(ICESL_SOURCE
   UniqueID.h
   UniqueID.cpp
   IPlugin.h
+  IPlugin.cpp
   IPluginEnvironment.h
   EnumerableSettingsInterface.h
   IPath.h
