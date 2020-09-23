@@ -87,7 +87,7 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
   /// retrieve line width
   float line_width_mm = 0.0f;
   {
-    auto s = m_EnumerableSettings->getSettingByName("line_width_mm" + std::to_string(brush));
+    auto s = m_EnumerableSettings->getSettingByName("line_width_mm_" + std::to_string(brush));
     if (s == nullptr) {
       throw Fatal("Missing setting");
     }
@@ -114,7 +114,7 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
         fills.push_back(std::unique_ptr<IceSLInterface::IPath>(new IceSLInterface::Path()));
         fills.back()->createPath(cnt, true);
         // customize flow
-        int flow_idx = fills.back()->addPathAttribute("flow");
+        int flow_idx = fills.back()->addPathAttribute("flow_multiplier");
         fills.back()->setPathAttributeValue(flow_idx, line_width_mm / nozzle_diameter);
       }
     }
@@ -129,14 +129,14 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
 bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   // allocates an array with one value per brush
-  m_LineWidth_mm.resize(256/*NUM BRUSHES*/,0.4f);
+  m_LineWidth_mm.resize(256/*number of brushes*/,0.4f);
   // generates setting per-brush for this infiller
   for (int i = 0; i < (int)m_LineWidth_mm.size(); i++) {
-    enumerable_settings.addSettingFromInterface(
+    enumerable_settings.addSettingFromPlugin(
       &m_LineWidth_mm[i], 
       &m_LineWidth_min_mm, 
       &m_LineWidth_max_mm, 
-      "line_width_mm", 
+      "line_width_mm_" + std::to_string(i),
       "Line width",
       "Brush_" + std::to_string(i), 
       "Specifies the line width to be used during contouring. The flow is adjusted accordingly.", 

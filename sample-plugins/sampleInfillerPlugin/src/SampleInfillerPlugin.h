@@ -40,7 +40,7 @@ class SampleInfillerPlugin : public IceSLInterface::IInfillerPlugin
 private:
 
   std::vector<float> m_LineWidth_mm;
-  float m_LineWidth_min_mm = 0.0f;
+  float m_LineWidth_min_mm = 0.01f;
   float m_LineWidth_max_mm = 1.0f;
 
 public:
