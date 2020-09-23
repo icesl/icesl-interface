@@ -41,6 +41,7 @@ namespace IceSLInterface
     /// \param brush the brush for which the infiller is called
     /// \param surface the geometric outline of the area to be filled
     /// \param fills the vector to be filled with paths.
+    /// \param preserve_order set to true if the order is to be preserved (defaults to false)
     ///
     /// The method returns true if a infill was produced, false if the infill should be replaced
     /// by a dense infill using IceSL built-in infiller.
@@ -50,7 +51,8 @@ namespace IceSLInterface
       float height_mm,
       int   brush,
       const ClipperLib::Paths &surface,
-      std::vector<std::unique_ptr<IPath> > &fills) = 0;
+      std::vector<std::unique_ptr<IPath> > &fills,
+      bool                                 &preserve_order) = 0;
 
   protected:
 

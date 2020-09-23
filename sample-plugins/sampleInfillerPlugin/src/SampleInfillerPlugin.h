@@ -14,6 +14,7 @@ extern "C" ICESL_PLUGIN_API void destroyPlugin(IceSLInterface::IPlugin* plugin);
 class SampleInfiller : public IceSLInterface::IInfillerInterface
 {
 public:
+
   SampleInfiller() = default;
   virtual ~SampleInfiller() = default;
 
@@ -30,13 +31,20 @@ public:
   void prepareInfillForSlice(int id, const AAB<2, int> &xy_slice_box, float height, int brush) override;
 
   // called to generate the infill in a surface
-  bool generateInfill(int id, float slice_height_mm, int brush, const ClipperLib::Paths &surface, std::vector<std::unique_ptr<IceSLInterface::IPath> > &fills) override;
+  bool generateInfill(int id, float slice_height_mm, int brush, const ClipperLib::Paths &surface, std::vector<std::unique_ptr<IceSLInterface::IPath> > &fills,bool &preserve_order) override;
 
 };
 
 class SampleInfillerPlugin : public IceSLInterface::IInfillerPlugin
 {
+private:
+
+  std::vector<float> m_LineWidth_mm;
+  float m_LineWidth_min_mm = 0.0f;
+  float m_LineWidth_max_mm = 1.0f;
+
 public:
+
   using IInfillerInterface = IceSLInterface::IInfillerInterface;
 
   SampleInfillerPlugin() = default;
@@ -53,7 +61,7 @@ public:
   std::string author() const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
   std::string comment() const override { return "Example for infiller plugins"; }
 
-  bool addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) const override;
+  bool addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
   std::unique_ptr<IInfillerInterface> createInfiller () const override
   {
