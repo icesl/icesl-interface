@@ -77,7 +77,7 @@ namespace IceSLInterface
       return true;
     }
 
-    virtual bool addInfillerSettings(EnumerableSettingsInterface& enumerable_settings) const = 0;
+    virtual bool addInfillerSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
 
     virtual std::unique_ptr<IInfillerInterface> createInfiller() const = 0;
   };

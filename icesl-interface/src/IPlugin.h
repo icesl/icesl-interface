@@ -7,7 +7,7 @@
 namespace IceSLInterface
 {
 
-static const std::string gInterfaceVersion = "0.1";
+static const std::string gInterfaceVersion = "0.2";
 
 /**
  * @brief The IPlugin class is the common interface to all plugins, it contains

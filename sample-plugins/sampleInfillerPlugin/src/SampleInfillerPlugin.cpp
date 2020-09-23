@@ -105,7 +105,7 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
 
 // -----------------------------------------------
  
-bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) const
+bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   return true;
 }
