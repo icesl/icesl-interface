@@ -1,3 +1,12 @@
+/*
+ *  Copyright (c) 2020, INRIA
+ *  All rights reserved.
+ *
+ *  IceSL plugin interface
+ *
+ *  MFX Team
+ */
+
 // SL 2020-09-07
 #pragma once
 
@@ -10,8 +19,8 @@ namespace IceSLInterface
   /// \brief Interface to a path
   /**
 
-   NOTE: to simplify processing cylic paths must have first point == last point
-         this is different from ClipperLib where the last segment is implicit
+   NOTE: to simplify processing, cylic paths must have first point == last point
+         this is different from ClipperLib where this last segment is implicit
 
    IceSL understands the following attributes:
    
@@ -43,7 +52,7 @@ namespace IceSLInterface
     /// \brief sets the path type bitfield
     virtual void setPathType(uint) = 0;
 
-    /// \brief initialized a path, where cyclic indicates if the path is open or close
+    /// \brief initialize a path, where cyclic indicates if the path is open or closed
     /// must be called before any per-vertex operation is performed
     virtual void createPath(const ClipperLib::Path &path, bool cyclic) = 0;
 
@@ -59,7 +68,7 @@ namespace IceSLInterface
     /// \brief returns the position of the i-th vertex in integer grid space
     virtual ClipperLib::IntPoint getVertexPos(int) const = 0;
 
-    /// \brief returns the path attributes names
+    /// \brief returns the path attributes' names
     virtual void getPathAttributes(std::vector<std::string> &) const = 0;
 
     /// \brief returns the index of the path attributes, -1 if unknown

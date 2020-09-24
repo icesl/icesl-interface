@@ -1,3 +1,12 @@
+/*
+ *  Copyright (c) 2020, INRIA
+ *  All rights reserved.
+ *
+ *  IceSL plugin interface
+ *
+ *  MFX Team
+ */
+
 // SP and CZ 2020-09-16
 #pragma once
 

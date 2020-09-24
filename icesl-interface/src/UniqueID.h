@@ -1,3 +1,12 @@
+/*
+ *  Copyright (c) 2020, INRIA
+ *  All rights reserved.
+ *
+ *  IceSL plugin interface
+ *
+ *  MFX Team
+ */
+
 #pragma once
 
 #include <string>
@@ -20,6 +29,7 @@
 #pragma comment(lib, "rpcrt4.lib")
 #endif
 
+/// Class structure to generate a Unique ID
 struct ICESL_PUBLIC_CLASS _UniqueID {
     unsigned long  Data1;
     unsigned short Data2;

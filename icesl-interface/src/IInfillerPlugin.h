@@ -1,3 +1,12 @@
+/*
+ *  Copyright (c) 2020, INRIA
+ *  All rights reserved.
+ *
+ *  IceSL plugin interface
+ *
+ *  MFX Team
+ */
+
 #pragma once
 
 #include "IPlugin.h"
@@ -7,22 +16,20 @@
 
 namespace IceSLInterface
 {
-
+  /// \brief General interface for implementing an infill in a plugin
   class IInfillerInterface
   {
   public:
-    /// \brief Constructor
     IInfillerInterface() = default;
-    /// \brief Desstructor
     virtual ~IInfillerInterface() = default;
 
-    /// \brief Caller sets the enumerable settings (all print settings can be accessed through this interface)
+    /// \brief Save the interface to access all printing settings
     void setSettings(const EnumerableSettingsInterface *settings) { m_EnumerableSettings = settings; }
 
-    /// \brief Caller sets the total number of slices, before any path is generated
+    /// \brief Sets the total number of slices, before any path is generated
     virtual void setNumSlices(int num) = 0;
 
-    /// \brief Caller sets the world space information, before any path is generated
+    /// \brief Sets the world space information, before any path is generated
     /// This allows to go from build space to world space, for intance to query per-layer or field parameters.
     virtual void setWorldSpace(v3f world_corner_mm, v3f extent_mm) = 0;
 
@@ -37,14 +44,14 @@ namespace IceSLInterface
 
     /// \brief Called on each surface within a slice, asking for the infill to be generated within
     /// \param id the slice id (starts at 0)
-    /// \param height_mm altitude of the layer bottm in mm, build space (starts at 0.0)
-    /// \param brush the brush for which the infiller is called
+    /// \param height_mm altitude of the layer's bottom in mm, build space (starts at 0.0)
+    /// \param brush the brush from which the infiller is called
     /// \param surface the geometric outline of the area to be filled
     /// \param fills the vector to be filled with paths.
     /// \param preserve_order set to true if the order is to be preserved (defaults to false)
     ///
-    /// The method returns true if a infill was produced, false if the infill should be replaced
-    /// by a dense infill using IceSL built-in infiller.
+    /// The method returns true if an infill was produced, false if the infill should be replaced
+    /// by a dense infill using IceSL's built-in infiller.
     ///
     virtual bool generateInfill(
       int   id,
@@ -56,6 +63,7 @@ namespace IceSLInterface
 
   protected:
 
+    /// \brief Use this interface to access or add printing settings as well as query # of brushes or extruders (where applicable)
     const EnumerableSettingsInterface *m_EnumerableSettings;
   };
 
@@ -65,22 +73,20 @@ namespace IceSLInterface
   class IInfillerPlugin : public IPlugin
   {
   public:
-    /// \brief signature of function pointer used to create an implementaiton of IInfillerInterface
-    using InfillerBuilderFunction = std::unique_ptr<IInfillerInterface> (*) ();
 
-    /// \brief Constructor
     IInfillerPlugin() = default;
-    /// \brief Desstructor
     ~IInfillerPlugin() override = default;
 
-    /// \brief Called upon plugin initialization
+    /// \brief Called upon plugin initialization (e.g., resource managment, etc)
     bool initialize(IPluginEnvironment &env) override
     {
       return true;
     }
 
+    /// \brief Implement this function to add printing settings specific to the infiller using the EnumerableSettingsInterface interface
     virtual bool addInfillerSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
 
+    /// \brief Implement this function to return the infiller's inplementation of the IInfillerInterface interface
     virtual std::unique_ptr<IInfillerInterface> createInfiller() const = 0;
   };
 

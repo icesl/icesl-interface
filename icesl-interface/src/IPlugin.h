@@ -1,3 +1,12 @@
+/*
+ *  Copyright (c) 2020, INRIA
+ *  All rights reserved.
+ *
+ *  IceSL plugin interface
+ *
+ *  MFX Team
+ */
+
 #pragma once
 
 #include "IPluginEnvironment.h"
@@ -10,7 +19,7 @@ namespace IceSLInterface
 
 /**
  * @brief The IPlugin class is the common interface to all plugins, it contains
- * function for initialization and cleaning of resources.
+ * functionality for initialization and cleaning of resources.
  */
 class IPlugin
 {
@@ -18,28 +27,30 @@ public:
   IPlugin() = default;
   virtual ~IPlugin() = default;
 
-  /// \brief initialize the plugin, return true if initialization is successful, false otherwise.
-  /// If false, IceSL will not use the plugin.
+  /// \brief Initialize the plugin, return true if initialization is successful, false otherwise.
+  /// If false, IceSL will omit the plugin.
   /// @warning the implementation of this function should call gluxInit() !
   virtual bool initialize(IPluginEnvironment &env) = 0;
 
-  /// \brief Perform some cleanup here, if needed.
+  /// \brief Perform cleanup here when applicable
   virtual void dispose() = 0;
 
-  /// \brief return the name of the plugin
+  /// \brief Return the name of the plugin
   virtual std::string name() const = 0;
-  /// \brief return the authors of the plugin
+  /// \brief Return the authors of the plugin
   virtual std::string author() const = 0;
-  /// \brief return a description of the plugin
+  /// \brief Return a description of the plugin
   virtual std::string comment() const = 0;
 
-  /// \brief get the interface version used in the plugin
+  /// \brief Get the interface version used in the plugin
   const std::string& interfaceVersion() { return m_InterfaceVersion; }
 
 private:
+  /// \brief Internal. Abstain from using
   const std::string m_InterfaceVersion = InterfaceVersion;
 };
 
+// Signatures of plugin creation and destruction functions
 #ifdef WIN32
 #define ICESL_PLUGIN_API __declspec(dllexport)
 #else
@@ -53,6 +64,7 @@ typedef void (__cdecl * DESTROYPLUGINFUNC)(IPlugin*);
 typedef IPlugin*(* CREATEPLUGINFUNC)();
 typedef void (* DESTROYPLUGINFUNC)(IPlugin*);
 #endif
+
 /// Signatures of the functions required to create and destroy
 /// the IPlugin object from the host application, typically defined as
 ///    MyPlugin.h

@@ -1,3 +1,12 @@
+/*
+ *  Copyright (c) 2020, INRIA
+ *  All rights reserved.
+ *
+ *  IceSL plugin interface
+ *
+ *  MFX Team
+ */
+
 // SL 2020-09-07
 #pragma once
 
@@ -8,7 +17,7 @@
 namespace IceSLInterface
 {
 
-  /// \brief Implements a basic path to return geometry to IceSL
+  /// \brief Implements a basic path. Used in return geometry data back to IceSL
   class Path : public IPath
   {
   protected:
@@ -39,7 +48,7 @@ namespace IceSLInterface
     /// \brief sets the path type bitfield
     void setPathType(uint) override;
 
-    /// \brief initialized a path, where cyclic indicates if the path is open or close
+    /// \brief initialize a path, where parameter cyclic indicates if the path is open or closed
     /// must be called before any per-vertex operation is performed
     void createPath(const ClipperLib::Path &path, bool cyclic) override;
 
@@ -52,10 +61,10 @@ namespace IceSLInterface
     /// \brief returns the number of vertices in the path
     int  getNumVertices() const override;
 
-    /// \brief returns the position of the i-th vertex in iinteger grid space
+    /// \brief returns the position of the i-th vertex in integer grid space
     ClipperLib::IntPoint getVertexPos(int) const override;
 
-    /// \brief returns the path attributes names
+    /// \brief returns the path attributes' names
     void getPathAttributes(std::vector<std::string> &) const override;
 
     /// \brief returns the index of the path attributes, -1 if unknown
