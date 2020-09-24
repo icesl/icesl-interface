@@ -3,6 +3,7 @@
 
 // -----------------------------------------------
 
+// --- Shared library interface ---
 IceSLInterface::IPlugin* createPlugin()
 {
   return new SampleInfillerPlugin();
@@ -12,6 +13,7 @@ void destroyPlugin(IceSLInterface::IPlugin* plugin)
 {
   delete plugin;
 }
+// ----
 
 // -----------------------------------------------
 
@@ -132,6 +134,7 @@ bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSetting
   m_LineWidth_mm.resize(enumerable_settings.getNumberOfBrushes(),0.4f);
   // generates setting per-brush for this infiller
   for (int i = 0; i < (int)m_LineWidth_mm.size(); i++) {
+    std::unique_ptr<IceSLInterface::EnumerableSettingsInterface::SettingInterface> s = 
     enumerable_settings.addSettingFromPlugin(
       &m_LineWidth_mm[i],
       &m_LineWidth_min_mm,
@@ -141,12 +144,15 @@ bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSetting
       "Brush_" + std::to_string(i),
       "Specifies the line width to be used during contouring. The flow is adjusted accordingly.",
       1000, // rank to order multiple settings, lower appears before
-      [this, &enumerable_settings, i]() -> bool { // show setting only when the 
+      [this, &enumerable_settings, i]() -> bool { // show setting only when the infiller is selected
         std::string infiller;
         enumerable_settings.getSettingByName("infill_type_" + std::to_string(i))->getValue(infiller);
         return infiller == this->name();
       }
     );
+    if (s == nullptr) {
+      return false;
+    }
   }
   return true;
 }
