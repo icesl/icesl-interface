@@ -129,18 +129,24 @@ bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const Cl
 bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   // allocates an array with one value per brush
-  m_LineWidth_mm.resize(256/*number of brushes*/,0.4f);
+  m_LineWidth_mm.resize(enumerable_settings.getNumberOfBrushes(),0.4f);
   // generates setting per-brush for this infiller
   for (int i = 0; i < (int)m_LineWidth_mm.size(); i++) {
     enumerable_settings.addSettingFromPlugin(
-      &m_LineWidth_mm[i], 
-      &m_LineWidth_min_mm, 
-      &m_LineWidth_max_mm, 
+      &m_LineWidth_mm[i],
+      &m_LineWidth_min_mm,
+      &m_LineWidth_max_mm,
       "line_width_mm_" + std::to_string(i),
       "Line width",
-      "Brush_" + std::to_string(i), 
-      "Specifies the line width to be used during contouring. The flow is adjusted accordingly.", 
-      1000); // rank to order multiple settings, lower appears before
+      "Brush_" + std::to_string(i),
+      "Specifies the line width to be used during contouring. The flow is adjusted accordingly.",
+      1000, // rank to order multiple settings, lower appears before
+      [this, &enumerable_settings, i]() -> bool { // show setting only when the 
+        std::string infiller;
+        enumerable_settings.getSettingByName("infill_type_" + std::to_string(i))->getValue(infiller);
+        return infiller == this->name();
+      }
+    );
   }
   return true;
 }

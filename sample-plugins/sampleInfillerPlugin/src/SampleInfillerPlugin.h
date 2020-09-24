@@ -57,9 +57,9 @@ public:
   }
   void dispose() override {}
 
-  std::string name() const override { return "SampleInfiller"; }
-  std::string author() const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
-  std::string comment() const override { return "Example for infiller plugins"; }
+  std::string name()    const override { return "SampleInfiller"; }
+  std::string author()  const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
+  std::string comment() const override { return "Example of an infiller plugin"; }
 
   bool addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 

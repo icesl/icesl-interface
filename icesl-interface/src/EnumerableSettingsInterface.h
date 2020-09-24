@@ -44,13 +44,13 @@ namespace IceSLInterface
       /// \brief check is the setting varies per layer within the printing volume
       virtual bool isPerLayerSetting() const = 0;
       /// \brief check if the setting is described by a volumetric field in the printing volume
-      virtual bool isFieldSetting() const = 0;
+      virtual bool isFieldSetting()    const = 0;
 
       /// \brief get constant setting value based on type, undefined behavior if the setting
       /// does not have the right type.
-      virtual void getValue(bool& value) const = 0;
-      virtual void getValue(int& value) const = 0;
-      virtual void getValue(float& value) const = 0;
+      virtual void getValue(bool& value)        const = 0;
+      virtual void getValue(int& value)         const = 0;
+      virtual void getValue(float& value)       const = 0;
       virtual void getValue(std::string& value) const = 0;
 
       /// \brief get the setting's type, unit and flags
@@ -60,7 +60,7 @@ namespace IceSLInterface
 
       /// \brief get setting value at specified height (h),
       /// require setting to be of type 'float' with Constant or PerLayer variation
-      virtual double valueAtHeight(double h) const = 0;
+      virtual double valueAtHeight(double h)  const = 0;
       /// \brief get setting value at specified position (pos)
       /// require setting to be of type 'float' with Field variation
       virtual double valueAtPosition(v3f pos) const = 0;
@@ -132,6 +132,11 @@ namespace IceSLInterface
       e_Units units = e_NoUnit,
       e_Flags flags = e_NoFlag
     ) = 0;
+
+    /// \brief queries the number of available brushes
+    virtual int getNumberOfBrushes()   const { return 0; }
+    /// \brief queries the number of available extruders (when available)
+    virtual int getNumberOfExtruders() const { return 0; }
 
   private:
 
