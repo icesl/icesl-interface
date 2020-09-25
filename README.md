@@ -16,7 +16,7 @@ This repository is **private** and isn't open to the **general public**. If you 
 
 ## The Interface
 
-An IceSL plugin is a shared library file (`.dll` on Windows platforms and `.so` on Linux OS's). This file should be placed in the folder `icesl-plugins` which is contained in the IceSL's installation directory. The option _Use plugins_ shoould be activated in IceSL.
+An IceSL plugin is a shared library file (`.dll` on Windows platforms and `.so` on Linux OS's). This file should be placed in the folder `icesl-plugins` which is contained in the IceSL's installation directory. The option _Use plugins_ should be activated in IceSL.
 
 These plugin files will be automatically picked up by IceSL at startup. They, however, could be ignored for the following two reasons:
 - Missing or incorrect shared interface functions.
@@ -51,7 +51,7 @@ For minimal details not covered here, please try first looking how it was done i
 1. First decide the type of plugin to be targeted (e.g., new infill, lua extension, gcode wrapper, etc.).
 2. Create a plugin class derived from the according intermediate class (e.g., `class MyInfillerPlugin : public IceSLInterface::IInfillerPlugin`)
     * More intemediate classes will be added with time. If you can't find one apt to your goals, please contact us.
-3. More often than note, an intermediate interface also has to be implemented (for memory managment reasons). Please create an interface derived from the according intermadiate interface (e.g., `class MyInfillerInterface : public IceSLInterface::IInfillerInterface`).
+3. More often than note, an intermediate interface also has to be implemented (for memory managment reasons). Please create an interface derived from the according intermediate interface (e.g., `class MyInfillerInterface : public IceSLInterface::IInfillerInterface`).
 4. Implement the shared interface to be used by IceSL. It consists of two functions, both declared in the header file and implemented in the source file:
     1. `extern "C" ICESL_PLUGIN_API IceSLInterface::IPlugin * createPlugin();`
     2. `extern "C" ICESL_PLUGIN_API void destroyPlugin(IceSLInterface::IPlugin* plugin);`
