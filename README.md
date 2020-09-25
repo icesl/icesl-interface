@@ -21,3 +21,26 @@ These plugin files will be automatically picked up by IceSL at startup. They, ho
 - Interface version mismatch.
 
 Make sure you're using the latest interface as well as the latest version of IceSL.
+
+## Setting up the repository
+
+1. Clone the repository from this link: [https://gitlab.inria.fr/mfx/icesl-interface.git](https://gitlab.inria.fr/mfx/icesl-interface.git)
+2. Checkout the master branch:
+    1. `cd IceSL-Interface`
+    2. `checkout master`
+3. Checkout the submodules:
+    1. `git submodule sync --recursive`
+    2. `git submodule update --init --recursive`
+    3. `git submodule foreach checkout master`
+    4. `git submodule foreach git pull`
+4. Execute CMake on the repo:
+    * Either use CMake-gui on the _IceSL-Interface_ folder
+    * Or execute in your build folder `cmake /src_dir/IceSL-interface` where `src_dir` is the folder where you cloned the repo
+5. Compile the sample plugin:
+    * Open the resulting `Plugin-Interface` project in your IDE of choice and compile the module `sampleInfillerPlugin`
+    * Or execute `make sampleInfillerPlugin` on the build folder
+
+If everything goes well, the output of the sample plugin should be in `/src_dir/IceSL-interface/bin`, either as a `.dll` or a `.so` file.
+
+## Creating your own plugin
+
