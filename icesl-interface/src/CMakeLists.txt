@@ -34,8 +34,10 @@ SET(ICESL_SOURCE
   Path.h
   Path.cpp
   ILayer.h
+  ILayerSet.h
   # Plugins
   IInfillerPlugin.h
+  IMachineCodePlugin.h
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})
