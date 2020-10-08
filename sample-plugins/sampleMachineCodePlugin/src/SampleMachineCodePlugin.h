@@ -30,12 +30,15 @@ private:
   int          m_WritingLayer = -1;
   int m_LastLayer;
   std::ofstream m_Output;
+
+  int m_NbVertices = 0;
+  int m_NbSegments = 0;
+  int m_Offset = 0;
+
 };
 
 class SampleMachineCodePlugin : public IceSLInterface::IMachineCodePlugin
 {
-private:
-
 public:
 
   using IMachineCodeInterface = IceSLInterface::IMachineCodeInterface;
@@ -54,6 +57,11 @@ public:
   std::string author()  const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
   std::string comment() const override { return "Example of an MachineCode plugin"; }
 
+  bool addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override
+  {
+    return true;
+  }
+
   std::unique_ptr<IMachineCodeInterface> createMachineCodeWriter(std::unique_ptr<IceSLInterface::ILayerSet> layers,
                                                                  const IceSLInterface::EnumerableSettingsInterface *settings,
                                                                  const std::set<int>&               used_brushes) const override
@@ -61,14 +69,6 @@ public:
     return std::unique_ptr<IMachineCodeInterface>(new SampleMachineCode(std::move(layers), settings, used_brushes));
   }
 
-/*
-  bool addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
-
-  std::unique_ptr<IMachineCodeInterface> createMachineCode () const override
-  {
-     return std::unique_ptr<SampleMachineCode>(new SampleMachineCode());
-  }
-*/
 };
 
 // -----------------------------------------------

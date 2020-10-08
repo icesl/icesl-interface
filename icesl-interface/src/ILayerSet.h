@@ -20,19 +20,25 @@ namespace IceSLInterface
   */
   class ILayerSet
   {
-  public:
-
+  protected:
     /// \brief creates an empty layer
     ILayerSet() = default;
-
+  public:
     /// \brief destructor
     virtual ~ILayerSet() = default;
 
     /// \brief returns the number of layers in the print
-    virtual int  getNumLayer() const = 0;
+    virtual int  getNumLayers() const = 0;
 
     /// \brief returns the i-th layer as a generic layer interface
     virtual const ILayer &getLayer(int) const = 0;
+
+    /// \brief convert internal coordinates (integer) to build space coordinates
+    virtual v2f xyBuildSpace(ClipperLib::IntPoint) const = 0;
+
+    /// \brief convert internal coordinates (integer) to world space coordinates
+    virtual v2f xyWorldSpace(ClipperLib::IntPoint) const = 0;
+
   };
 
 }
