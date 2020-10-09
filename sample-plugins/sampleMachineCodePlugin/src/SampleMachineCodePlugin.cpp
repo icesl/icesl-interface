@@ -51,9 +51,7 @@ bool SampleMachineCode::startWriting(const std::string& filename)
         for (int nVertex=0; nVertex<path.getNumVertices(); ++nVertex)
         {
           v2f xy = m_LayerSet->xyWorldSpace(path.getVertexPos(nVertex));
-          float z = layer.zTopWorldSpace() - 0.5f * layer.thickness();
-//          v2f xy = m_LayerSet->xyBuildSpace(path.getVertexPos(nVertex));
-//          float z = layer.zTopBuildSpace() - 0.5f * layer.thickness();
+          float z = static_cast<float>(layer.zTopWorldSpace()) - 0.5f * layer.thickness();
           m_Output << xy[0] << " " << xy[1] << " " << z << " " << 0.2 << "\n";
         }
       }
@@ -67,6 +65,7 @@ bool SampleMachineCode::startWriting(const std::string& filename)
     m_WritingLayer = 0;
     m_LastLayer = m_LayerSet->getNumLayers();
   } catch (Fatal& f) {
+    std::cout << f.message() << std::endl;
     abortWriting();
     return false;
   }
@@ -109,6 +108,7 @@ bool SampleMachineCode::stepWriting()
 
 
   } catch (Fatal& f) {
+    std::cerr << f.message() << std::endl;
     abortWriting();
     return false;
   }
