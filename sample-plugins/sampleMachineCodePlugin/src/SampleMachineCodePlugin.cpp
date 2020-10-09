@@ -51,7 +51,7 @@ bool SampleMachineCode::startWriting(const std::string& filename)
         for (int nVertex=0; nVertex<path.getNumVertices(); ++nVertex)
         {
           v2f xy = m_LayerSet->xyWorldSpace(path.getVertexPos(nVertex));
-          float z = static_cast<float>(layer.zTopWorldSpace()) - 0.5f * layer.thickness();
+          float z = static_cast<float>(layer.zTopWorldSpace()) - 0.5f * static_cast<float>(layer.thickness());
           m_Output << xy[0] << " " << xy[1] << " " << z << " " << 0.2 << "\n";
         }
       }

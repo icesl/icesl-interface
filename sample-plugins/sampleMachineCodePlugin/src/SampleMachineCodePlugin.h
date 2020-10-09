@@ -27,7 +27,7 @@ public:
   float writingProgress() const override;
 
 private:
-  int          m_WritingLayer = -1;
+  int m_WritingLayer = -1;
   int m_LastLayer;
   std::ofstream m_Output;
 
@@ -53,9 +53,10 @@ public:
   }
   void dispose() override {}
 
-  std::string name()    const override { return "SampleMachineCode"; }
-  std::string author()  const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
-  std::string comment() const override { return "Example of an MachineCode plugin"; }
+  std::string name()      const override { return "SampleMachineCode"; }
+  std::string author()    const override { return "Cédric Zanni"; }
+  std::string comment()   const override { return "Example of an MachineCode plugin that exports skeletons made out of paths"; }
+  std::string extension() const override { return "txt"; }
 
   bool addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override
   {

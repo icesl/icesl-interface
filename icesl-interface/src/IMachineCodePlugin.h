@@ -66,6 +66,9 @@ namespace IceSLInterface
       return true;
     }
 
+    /// \brief Output file extension
+    virtual std::string extension() const = 0;
+
     /// \brief Implement this function to add printing settings specific to the infiller using the EnumerableSettingsInterface interface
     virtual bool addMachineCodeSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
 
