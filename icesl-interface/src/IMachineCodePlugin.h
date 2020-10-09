@@ -70,9 +70,9 @@ namespace IceSLInterface
     virtual bool addMachineCodeSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
 
     /// \brief Implement this function to return the machine code writer's implementation of the IMachineCodeInterface interface
-    virtual std::unique_ptr<IMachineCodeInterface> createMachineCodeWriter(std::unique_ptr<IceSLInterface::ILayerSet> layers,
-                                                                           const EnumerableSettingsInterface *settings,
-                                                                           const std::set<int>&               used_brushes) const = 0;
+    virtual std::unique_ptr<IMachineCodeInterface> createMachineCode(std::unique_ptr<IceSLInterface::ILayerSet> layers,
+                                                                     const EnumerableSettingsInterface *settings,
+                                                                     const std::set<int>&               used_brushes) const = 0;
   };
 
 }

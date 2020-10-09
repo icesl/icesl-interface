@@ -34,8 +34,7 @@ bool SampleMachineCode::startWriting(const std::string& filename)
       {
         const IceSLInterface::IPath& path = layer.getPath(nPath);
         m_NbVertices += path.getNumVertices();
-        m_NbSegments += path.getNumVertices()-1;
-        m_NbSegments += path.isCyclic() ? 1 : 0;
+        m_NbSegments += path.getNumVertices() - (path.isCyclic() ? 0 : 1);
       }
     }
 
@@ -51,14 +50,11 @@ bool SampleMachineCode::startWriting(const std::string& filename)
 
         for (int nVertex=0; nVertex<path.getNumVertices(); ++nVertex)
         {
-          //TODO convert to world space !
-          if (path.getVertexPos(nVertex).X==219
-              && path.getVertexPos(nVertex).Y==219) {
-            std::cout << "oups" << std::endl;
-          }
-          v2f xy = m_LayerSet->xyBuildSpace(path.getVertexPos(nVertex));
-          float z = layer.zTopBuildSpace() - 0.5f * layer.thickness();
-          m_Output << xy[0] << " " << xy[1] << " " << z << "\n";
+          v2f xy = m_LayerSet->xyWorldSpace(path.getVertexPos(nVertex));
+          float z = layer.zTopWorldSpace() - 0.5f * layer.thickness();
+//          v2f xy = m_LayerSet->xyBuildSpace(path.getVertexPos(nVertex));
+//          float z = layer.zTopBuildSpace() - 0.5f * layer.thickness();
+          m_Output << xy[0] << " " << xy[1] << " " << z << " " << 0.2 << "\n";
         }
       }
     }
@@ -89,7 +85,7 @@ bool SampleMachineCode::stepWriting()
         {
           const IceSLInterface::IPath& path = layer.getPath(nPath);
 
-          for (int nVertex=0; nVertex<path.getNumVertices(); ++nVertex)
+          for (int nVertex=0; nVertex<path.getNumVertices()-1; ++nVertex)
           {
             m_Output << nVertex+m_Offset << " " << nVertex+m_Offset+1  << "\n";
           }

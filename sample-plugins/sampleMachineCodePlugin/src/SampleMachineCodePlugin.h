@@ -62,7 +62,7 @@ public:
     return true;
   }
 
-  std::unique_ptr<IMachineCodeInterface> createMachineCodeWriter(std::unique_ptr<IceSLInterface::ILayerSet> layers,
+  std::unique_ptr<IMachineCodeInterface> createMachineCode(std::unique_ptr<IceSLInterface::ILayerSet> layers,
                                                                  const IceSLInterface::EnumerableSettingsInterface *settings,
                                                                  const std::set<int>&               used_brushes) const override
   {
