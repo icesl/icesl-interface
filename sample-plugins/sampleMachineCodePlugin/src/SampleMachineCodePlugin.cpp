@@ -2,6 +2,7 @@
 #include "Path.h"
 
 #include <LibSL/System/System.h>
+#include <iomanip>
 
 // -----------------------------------------------
 
@@ -15,114 +16,142 @@ void destroyPlugin(IceSLInterface::IPlugin* plugin)
 {
   delete plugin;
 }
+// ----
 
 // -----------------------------------------------
 
 bool SampleMachineCode::startWriting(const std::string& filename)
 {
   try {
-    m_Output = std::ofstream(filename);
 
-
-    m_NbVertices = 0;
-    m_NbSegments = 0;
-    for (int nLayer=0; nLayer<m_LayerSet->getNumLayers(); ++nLayer)
-    {
-      const IceSLInterface::ILayer& layer = m_LayerSet->getLayer(nLayer);
-
-      for (int nPath=0; nPath<layer.getNumPaths(); ++nPath)
-      {
-        const IceSLInterface::IPath& path = layer.getPath(nPath);
-        m_NbVertices += path.getNumVertices();
-        m_NbSegments += path.getNumVertices() - (path.isCyclic() ? 0 : 1);
-      }
+    // Get appropriate layer subset
+    bool layer_subset;
+    m_EnumerableSettings->getSettingByName("save_layer_subset")->getValue(layer_subset);
+    if (layer_subset) {
+      m_EnumerableSettings->getSettingByName("first_layer_saved")->getValue(m_FirstLayer);
+      m_EnumerableSettings->getSettingByName("number_layers_saved")->getValue(m_LastLayer);
+      m_LastLayer += m_FirstLayer;
     }
 
-    m_Output << m_NbVertices << "\n";
+    // Check bounds
+    if (m_FirstLayer >= m_LayerSet->getNumLayers() || m_LastLayer >= m_LayerSet->getNumLayers()) {
+      throw Fatal("[SampleMachineCode::startWriting] Out of bounds!\n1st layer: %d\nLast layer: %d\nNo. of layers: %d\n", m_FirstLayer, m_LastLayer, m_LayerSet->getNumLayers());
+    }
 
-    for (int nLayer=0; nLayer<m_LayerSet->getNumLayers(); ++nLayer)
-    {
-      const IceSLInterface::ILayer& layer = m_LayerSet->getLayer(nLayer);
-
-      for (int nPath=0; nPath<layer.getNumPaths(); ++nPath)
-      {
-        const IceSLInterface::IPath& path = layer.getPath(nPath);
-
-        for (int nVertex=0; nVertex<path.getNumVertices(); ++nVertex)
-        {
-          v2f xy = m_LayerSet->xyWorldSpace(path.getVertexPos(nVertex));
-          float z = static_cast<float>(layer.zTopWorldSpace()) - 0.5f * static_cast<float>(layer.thickness());
-          m_Output << xy[0] << " " << xy[1] << " " << z << " " << 0.2 << "\n";
+    // Calculate tightbox
+    for (int l = m_FirstLayer; l < m_LastLayer; l++) {
+      const IceSLInterface::ILayer& layer = m_LayerSet->getLayer(l);
+      for (int p = 0; p < layer.getNumPaths(); p++) {
+        const IceSLInterface::IPath& path = layer.getPath(p);
+        for (int v = 0; v < path.getNumVertices(); v++) {
+          m_TightSquare.addPoint(m_LayerSet->xyBuildSpace(path.getVertexPos(v)));
         }
       }
     }
 
-    m_Output << m_NbSegments << "\n";
-
-    m_Offset = 0;
-
-    // TAKE INTO ACCOUNT LAYER RANGE IF NOT DONE INTERNALY in ILayerSet !
-    m_WritingLayer = 0;
-    m_LastLayer = m_LayerSet->getNumLayers();
+    m_WritingLayer = m_FirstLayer;
+    m_EnumerableSettings->getSettingByName("svg_machine_code_stroke_width_mm")->getValue(m_StrokeWidth);
+   
   } catch (Fatal& f) {
-    std::cout << f.message() << std::endl;
-    abortWriting();
+    std::cerr << f.message() << std::endl;
     return false;
   }
+
   return true;
+}
+
+// -----------------------------------------------
+
+static std::string toHexString(v3f color)
+{
+  int hexColor = ((int)(color[0] * 255) << 16) | ((int)(color[1] * 255) << 8) | ((int)(color[2] * 255) << 0);
+  // Courtesy of https://stackoverflow.com/questions/5100718/integer-to-hex-string-in-c
+  std::stringstream hexStream;
+  hexStream << "#" << std::setfill('0') << std::setw(6) << std::hex << hexColor;
+  return hexStream.str();
 }
 
 bool SampleMachineCode::stepWriting()
 {
   try {
 
-    if (m_WritingLayer < (int)m_LastLayer) {
+    if (m_WritingLayer < m_LastLayer) {
 
-        const IceSLInterface::ILayer& layer = m_LayerSet->getLayer(m_WritingLayer);
-
-        for (int nPath=0; nPath<layer.getNumPaths(); ++nPath)
-        {
-          const IceSLInterface::IPath& path = layer.getPath(nPath);
-
-          for (int nVertex=0; nVertex<path.getNumVertices()-1; ++nVertex)
-          {
-            m_Output << nVertex+m_Offset << " " << nVertex+m_Offset+1  << "\n";
+      // Output SCG per layer
+      char filename[256];
+      std::sprintf(filename, m_OuputFileFormat.c_str(), m_OutputDirectory, m_WritingLayer);
+      LibSL::SvgHelpers::Svg svg(filename, m_TightSquare.enlarge(m_StrokeWidth), LibSL::Math::m4x4f::identity(), "mm");
+      for (int l = m_FirstLayer; l < m_LastLayer; l++) {
+        const IceSLInterface::ILayer& layer = m_LayerSet->getLayer(l);
+        for (int p = 0; p < layer.getNumPaths(); p++) {
+          const IceSLInterface::IPath& path = layer.getPath(p);
+          if (path.isCyclic()) {
+            svg.startPolygon();
+            svg.startPolygonPath();
+          } else {
+            svg.startPath();
+          }
+          for (int v = 0; v < path.getNumVertices(); v++) {
+            v2f point = m_LayerSet->xyBuildSpace(path.getVertexPos(v));
+            svg.addPoint(point[0], point[1]);
           }
           if (path.isCyclic()) {
-            m_Output << path.getNumVertices()-1+m_Offset << " " << m_Offset  << "\n";
+            svg.endPolygon();
+            svg.endPolygonPath();
+          } else {
+            svg.endPath();
           }
-          m_Offset += path.getNumVertices();
         }
+      }
 
       m_WritingLayer++;
-      return true; // keep going
-
     } else {
-
       // done
-      m_WritingLayer = -1;
-      m_Output.close();
       return false;
-
     }
-
 
   } catch (Fatal& f) {
     std::cerr << f.message() << std::endl;
     abortWriting();
     return false;
   }
+
   return true;
 }
 
+// -----------------------------------------------
+
 void SampleMachineCode::abortWriting()
 {
-  m_Output.close();
+  char filename[256];
+  for (int l = m_FirstLayer; l < m_LastLayer; l++) {
+    std::sprintf(filename, m_OuputFileFormat.c_str(), m_OutputDirectory, l);
+    std::remove(filename);
+  }
 }
+
+// -----------------------------------------------
 
 float SampleMachineCode::writingProgress() const
 {
-  return m_WritingLayer / ((float)m_LayerSet->getNumLayers()-1.0f);
+  return static_cast<float>(m_WritingLayer) / (static_cast<float>(m_LayerSet->getNumLayers()) - 1.0f);
+}
+
+// -----------------------------------------------
+
+bool SampleMachineCodePlugin::addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
+{
+  auto s = enumerable_settings.addSettingFromPlugin(
+    &m_StrokeWidth_mm, &m_StrokeWidth_min_mm, &m_StrokeWidth_max_mm,
+    "svg_machine_code_stroke_width_mm", "SVG output stroke width (mm)", "Slicing", "Stroke width in millimeters for paths drawn in the SVG output",
+    2,
+    [this, &enumerable_settings]() -> bool {
+      std::string machine_code;
+      enumerable_settings.getSettingByName("output_machine_code")->getValue(machine_code);
+      return machine_code == this->name();
+    }
+  );
+  return s != nullptr;
 }
 
 // -----------------------------------------------

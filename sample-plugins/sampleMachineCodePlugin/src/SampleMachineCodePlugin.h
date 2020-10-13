@@ -22,9 +22,9 @@ public:
     : IceSLInterface::IMachineCodeInterface(std::move(layers), settings, used_brushes)
   {
     std::string nOfDigits = std::to_string(std::to_string(m_LayerSet->getNumLayers()).size());
-    m_OuputFileFormat = "layer_%0" + nOfDigits + "d.svg";
-    m_FirstLayer = 0;
-    m_LastLayer = m_LayerSet->getNumLayers();
+    m_OuputFileFormat = "%s/layer_%0" + nOfDigits + "d.svg"; // [output_folder]/layer_[layer_number].svg
+    m_FirstLayer   = 0;
+    m_LastLayer    = m_LayerSet->getNumLayers();
     m_WritingLayer = -1;
   }
 
@@ -37,6 +37,7 @@ public:
 
 private:
   std::string m_OuputFileFormat;
+  std::string m_OutputDirectory;
   int m_FirstLayer;
   int m_LastLayer;
   int m_WritingLayer;
@@ -79,9 +80,9 @@ public:
 
 private:
 
-  float m_StrokeWidth_mm = 0.1;
-  float m_StrokeWidth_min_mm = 0.1;
-  float m_StrokeWidth_max_mm = 1.0;
+  float m_StrokeWidth_mm = 0.1f;
+  float m_StrokeWidth_min_mm = 0.1f;
+  float m_StrokeWidth_max_mm = 1.0f;
 
 };
 
