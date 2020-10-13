@@ -34,7 +34,7 @@ bool SampleMachineCode::startWriting(const std::string& filename)
     }
 
     // Check bounds
-    if (m_FirstLayer >= m_LayerSet->getNumLayers() || m_LastLayer >= m_LayerSet->getNumLayers()) {
+    if (m_FirstLayer >= m_LayerSet->getNumLayers() || m_LastLayer > m_LayerSet->getNumLayers()) {
       throw Fatal("[SampleMachineCode::startWriting] Out of bounds!\n1st layer: %d\nLast layer: %d\nNo. of layers: %d\n", m_FirstLayer, m_LastLayer, m_LayerSet->getNumLayers());
     }
 
@@ -96,15 +96,15 @@ bool SampleMachineCode::stepWriting()
             svg.addPoint(point[0], point[1]);
           }
           if (path.isCyclic()) {
-            svg.endPolygon();
             svg.endPolygonPath();
+            svg.endPolygon();
           } else {
             svg.endPath();
           }
         }
       }
-
       m_WritingLayer++;
+
     } else {
       // done
       return false;
