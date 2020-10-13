@@ -15,11 +15,20 @@ class SampleMachineCode : public IceSLInterface::IMachineCodeInterface
 {
 public:
 
-  SampleMachineCode(std::unique_ptr<IceSLInterface::ILayerSet> layers,
-                    const IceSLInterface::EnumerableSettingsInterface *settings,
-                    const std::set<int>&               used_brushes)
-    : IceSLInterface::IMachineCodeInterface(std::move(layers), settings, used_brushes) {}
-  virtual ~SampleMachineCode() = default;
+  SampleMachineCode(
+    std::unique_ptr<IceSLInterface::ILayerSet>         layers,
+    const IceSLInterface::EnumerableSettingsInterface* settings,
+    const std::set<int>&                               used_brushes)
+    : IceSLInterface::IMachineCodeInterface(std::move(layers), settings, used_brushes)
+  {
+    std::string nOfDigits = std::to_string(std::to_string(m_LayerSet->getNumLayers()).size());
+    m_OuputFileFormat = "layer_%0" + nOfDigits + "d.svg";
+    m_FirstLayer = 0;
+    m_LastLayer = m_LayerSet->getNumLayers();
+    m_WritingLayer = -1;
+  }
+
+  virtual ~SampleMachineCode() override = default;
 
   bool startWriting(const std::string& filename) override;
   bool stepWriting() override;
@@ -27,14 +36,14 @@ public:
   float writingProgress() const override;
 
 private:
-  int m_WritingLayer = -1;
+  std::string m_OuputFileFormat;
+  int m_FirstLayer;
   int m_LastLayer;
-  std::ofstream m_Output;
+  int m_WritingLayer;
 
-  int m_NbVertices = 0;
-  int m_NbSegments = 0;
-  int m_Offset = 0;
-
+  AAB<2>    m_TightSquare;
+  float     m_StrokeWidth;
+  const v3f m_StrokeColor = v3f(0);
 };
 
 class SampleMachineCodePlugin : public IceSLInterface::IMachineCodePlugin
@@ -54,21 +63,25 @@ public:
   void dispose() override {}
 
   std::string name()      const override { return "SampleMachineCode"; }
-  std::string author()    const override { return "Cédric Zanni"; }
-  std::string comment()   const override { return "Example of an MachineCode plugin that exports skeletons made out of paths"; }
-  std::string extension() const override { return "txt"; }
+  std::string author()    const override { return "Salim Perchy"; }
+  std::string comment()   const override { return "Example of an MachineCode plugin that outputs paths into SVG files. Appropriate for debuging sliced output"; }
+  std::string extension() const override { return "DIR"; } // Each layer gets an SVG file. Output to a directory
 
-  bool addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override
-  {
-    return true;
-  }
+  bool addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
-  std::unique_ptr<IMachineCodeInterface> createMachineCode(std::unique_ptr<IceSLInterface::ILayerSet> layers,
-                                                                 const IceSLInterface::EnumerableSettingsInterface *settings,
-                                                                 const std::set<int>&               used_brushes) const override
+  std::unique_ptr<IMachineCodeInterface> createMachineCode(
+    std::unique_ptr<IceSLInterface::ILayerSet>         layers,
+    const IceSLInterface::EnumerableSettingsInterface* settings,
+    const std::set<int>&                               used_brushes) const override
   {
     return std::unique_ptr<IMachineCodeInterface>(new SampleMachineCode(std::move(layers), settings, used_brushes));
   }
+
+private:
+
+  float m_StrokeWidth_mm = 0.1;
+  float m_StrokeWidth_min_mm = 0.1;
+  float m_StrokeWidth_max_mm = 1.0;
 
 };
 

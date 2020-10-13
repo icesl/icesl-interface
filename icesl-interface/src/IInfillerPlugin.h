@@ -64,7 +64,7 @@ namespace IceSLInterface
   protected:
 
     /// \brief Use this interface to access or add printing settings as well as query # of brushes or extruders (where applicable)
-    const EnumerableSettingsInterface *m_EnumerableSettings;
+    const EnumerableSettingsInterface* m_EnumerableSettings;
   };
 
   /**
@@ -77,11 +77,8 @@ namespace IceSLInterface
     IInfillerPlugin() = default;
     ~IInfillerPlugin() override = default;
 
-    /// \brief Called upon plugin initialization (e.g., resource managment, etc)
-    bool initialize(IPluginEnvironment &env) override
-    {
-      return true;
-    }
+    /// \brief Called upon plugin initialization (e.g., resource management, etc)
+    bool initialize(IPluginEnvironment &env) override { return true; }
 
     /// \brief Implement this function to add printing settings specific to the infiller using the EnumerableSettingsInterface interface
     virtual bool addInfillerSettings(EnumerableSettingsInterface& enumerable_settings) = 0;

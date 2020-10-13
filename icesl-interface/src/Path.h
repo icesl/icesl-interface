@@ -67,7 +67,7 @@ namespace IceSLInterface
     /// \brief returns the path attributes' names
     void getPathAttributes(std::vector<std::string> &) const override;
 
-    /// \brief returns the index of the path attributes, -1 if unknown
+    /// \brief returns the index of the path attribute, -1 if unknown
     int  getPathAttributeIndex(const std::string &) const override;
 
     /// \brief gets the value of the path attribute

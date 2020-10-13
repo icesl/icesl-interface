@@ -16,7 +16,7 @@ class SampleInfiller : public IceSLInterface::IInfillerInterface
 public:
 
   SampleInfiller() = default;
-  virtual ~SampleInfiller() = default;
+  virtual ~SampleInfiller() override = default;
 
   void setNumSlices(int num) override;
   void setWorldSpace(v3f world_corner_mm, v3f extent_mm) override;
@@ -37,12 +37,6 @@ public:
 
 class SampleInfillerPlugin : public IceSLInterface::IInfillerPlugin
 {
-private:
-
-  std::vector<float> m_LineWidth_mm;
-  float m_LineWidth_min_mm = 0.01f;
-  float m_LineWidth_max_mm = 1.0f;
-
 public:
 
   using IInfillerInterface = IceSLInterface::IInfillerInterface;
@@ -65,8 +59,14 @@ public:
 
   std::unique_ptr<IInfillerInterface> createInfiller () const override
   {
-     return std::unique_ptr<SampleInfiller>(new SampleInfiller());
+     return std::unique_ptr<IInfillerInterface>(new SampleInfiller());
   }
+
+private:
+
+  std::vector<float> m_LineWidth_mm;
+  float m_LineWidth_min_mm = 0.01f;
+  float m_LineWidth_max_mm = 1.0f;
 };
 
 // -----------------------------------------------
