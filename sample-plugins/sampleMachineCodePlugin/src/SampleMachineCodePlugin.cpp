@@ -185,7 +185,7 @@ void SampleMachineCode::abortWriting()
 {
   char filename[256];
   for (int l = m_FirstLayer; l < m_LastLayer; l++) {
-    std::sprintf(filename, m_OuputFileFormat.c_str(), m_OutputDirectory, l);
+    std::sprintf(filename, m_OuputFileFormat.c_str(), m_OutputDirectory.c_str(), l);
     std::remove(filename);
   }
 }
