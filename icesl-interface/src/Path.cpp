@@ -23,6 +23,13 @@ bool Path::isCyclic() const
 
 // --------------------------------------------------------
 
+int Path::getTool() const
+{
+  return -1;
+}
+
+// --------------------------------------------------------
+
 uint Path::getPathType() const
 {
   return (uint)m_TypeBits;

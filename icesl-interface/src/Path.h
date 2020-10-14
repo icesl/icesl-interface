@@ -42,6 +42,9 @@ namespace IceSLInterface
     /// \brief returns true if the path is cyclic
     bool isCyclic() const override;
 
+    /// \brief return the extruder used for the path
+    int getTool() const override;
+
     /// \brief returns the path type bitfield
     uint getPathType() const override;
 

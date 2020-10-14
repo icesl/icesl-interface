@@ -46,7 +46,10 @@ namespace IceSLInterface
     /// \brief returns true if the path is cyclic
     virtual bool isCyclic() const = 0;
 
-    /// \brief returns the path type bitfield
+    /// \brief return the extruder used for the path
+    virtual int getTool() const = 0;
+
+    /// \brief returns the path type bitfield. The output of this function is enumerated in file 'PathTypeBitField.h'
     virtual uint getPathType() const = 0;
 
     /// \brief sets the path type bitfield

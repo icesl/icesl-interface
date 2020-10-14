@@ -3,6 +3,8 @@
 #include "IPlugin.h"
 #include "IMachineCodePlugin.h"
 
+#include <unordered_map>
+
 // -----------------------------------------------
 
 extern "C" ICESL_PLUGIN_API IceSLInterface::IPlugin * createPlugin();
@@ -43,8 +45,8 @@ private:
   int m_WritingLayer;
 
   AAB<2>    m_TightSquare;
-  float     m_StrokeWidth;
-  const v3f m_StrokeColor = v3f(0);
+  bool      m_OutputTravel;
+  static std::unordered_map<std::string, v3f> m_StrokeColors;
 };
 
 class SampleMachineCodePlugin : public IceSLInterface::IMachineCodePlugin
@@ -80,10 +82,7 @@ public:
 
 private:
 
-  float m_StrokeWidth_mm = 0.1f;
-  float m_StrokeWidth_min_mm = 0.1f;
-  float m_StrokeWidth_max_mm = 1.0f;
-
+  bool m_OutputTravel = false;
 };
 
 // -----------------------------------------------
