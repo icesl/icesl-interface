@@ -40,11 +40,12 @@ namespace IceSLInterface
     virtual void terminateInfill(int brush) = 0;
 
     /// \brief Called when the path generation is about to run for a given slice
-    virtual void prepareInfillForSlice(int id, const AAB<2, int> &xy_slice_box, float height, int brush) = 0;
+    virtual void prepareInfillForSlice(int id, const AAB<2, int> &xy_slice_box, float layer_height_mm, double layer_thickness_mm, int brush) = 0;
 
     /// \brief Called on each surface within a slice, asking for the infill to be generated within
     /// \param id the slice id (starts at 0)
-    /// \param height_mm altitude of the layer's bottom in mm, build space (starts at 0.0)
+    /// \param layer_height_mm altitude of the layer's bottom in mm, build space (starts at 0.0)
+    /// \param layer_thickness_mm thickness of the layer in mm
     /// \param brush the brush from which the infiller is called
     /// \param surface the geometric outline of the area to be filled
     /// \param fills the vector to be filled with paths.
@@ -54,9 +55,10 @@ namespace IceSLInterface
     /// by a dense infill using IceSL's built-in infiller.
     ///
     virtual bool generateInfill(
-      int   id,
-      float height_mm,
-      int   brush,
+      int    id,
+      float  layer_height_mm,
+      double layer_thickness_mm,
+      int    brush,
       const ClipperLib::Paths &surface,
       std::vector<std::unique_ptr<IPath> > &fills,
       bool                                 &preserve_order) = 0;

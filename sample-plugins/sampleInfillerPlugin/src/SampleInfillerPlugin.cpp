@@ -45,14 +45,14 @@ void SampleInfiller::terminateInfill(int brush)
 
 // -----------------------------------------------
 
-void SampleInfiller::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_box, float height, int brush)
+void SampleInfiller::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_box, float height_mm, double thickness_mm, int brush)
 {
 
 }
 
 // ----------------------------------------------- 
 
-bool SampleInfiller::generateInfill(int id, float height_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills,bool& preserve_order)
+bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills,bool& preserve_order)
 {
   /// This sample generates a simple concentric fill.
   //
