@@ -88,7 +88,9 @@ bool SampleMachineCode::startWriting(const std::string& filename)
         m_EnumerableSettings->getSettingByName("nozzle_diameter_mm_" + std::to_string(path.getTool()))->getValue(nozzle);
         nozzleDiameter = std::max(nozzle, nozzleDiameter);
         for (int v = 0; v < path.getNumVertices(); v++) {
-          m_TightSquare.addPoint(m_LayerSet->xyBuildSpace(path.getVertexPos(v)));
+          v2f point = m_LayerSet->xyBuildSpace(path.getVertexPos(v)); // build position
+          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to accomodate for SVG coordinate system (Y is flipped)
+          m_TightSquare.addPoint(point);
         }
       }
     }
@@ -144,7 +146,8 @@ bool SampleMachineCode::stepWriting()
         svg.setProperties(toHexString(strokeColor), "none", strokeWidth);
         svg.startPath();
         for (int v = 0; v < path.getNumVertices(); v++) {
-          v2f point = m_LayerSet->xyBuildSpace(path.getVertexPos(v));
+          v2f point = m_LayerSet->xyBuildSpace(path.getVertexPos(v)); // build position
+          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to accomodate for SVG coordinate system (Y is flipped)
           svg.addPoint(point[0], point[1]);
         }
         svg.endPath(true);
@@ -156,7 +159,8 @@ bool SampleMachineCode::stepWriting()
         svg.setProperties(toHexString(strokeColor), "none", 0.05f);
         svg.startPath();
         for (int v = 0; v < path->getNumVertices(); v++) {
-          v2f point = m_LayerSet->xyBuildSpace(path->getVertexPos(v));
+          v2f point = m_LayerSet->xyBuildSpace(path->getVertexPos(v)); // build position
+          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to accomodate for SVG coordinate system (Y is flipped)
           svg.addPoint(point[0], point[1]);
         }
         svg.endPath(true);
@@ -194,7 +198,7 @@ void SampleMachineCode::abortWriting()
 
 float SampleMachineCode::writingProgress() const
 {
-  return static_cast<float>(m_WritingLayer) / (static_cast<float>(m_LayerSet->getNumLayers()) - 1.0f);
+  return static_cast<float>(m_WritingLayer) / (static_cast<float>(m_LastLayer) - 1.0f);
 }
 
 // -----------------------------------------------

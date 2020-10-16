@@ -67,7 +67,7 @@ public:
 
   std::string name()      const override { return "SampleMachineCode"; }
   std::string author()    const override { return "Salim Perchy"; }
-  std::string comment()   const override { return "Example of an MachineCode plugin that outputs paths into SVG files. Appropriate for debuging sliced output"; }
+  std::string comment()   const override { return "Example of a MachineCode plugin that outputs paths into SVG files. Appropriate for debuging sliced output"; }
   std::string extension() const override { return "DIR"; } // Each layer gets an SVG file. Output to a directory
 
   bool addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
