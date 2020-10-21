@@ -55,7 +55,7 @@ public:
   std::string author()  const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }
   std::string comment() const override { return "Example of an infiller plugin"; }
 
-  bool addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
+  bool addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
   std::unique_ptr<IInfillerInterface> createInfiller () const override
   {

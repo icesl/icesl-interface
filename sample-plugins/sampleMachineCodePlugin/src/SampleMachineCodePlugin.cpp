@@ -203,7 +203,7 @@ float SampleMachineCode::writingProgress() const
 
 // -----------------------------------------------
 
-bool SampleMachineCodePlugin::addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
+bool SampleMachineCodePlugin::addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   auto s = enumerable_settings.addSettingFromPlugin(
     &m_OutputTravel, static_cast<bool*>(nullptr), static_cast<bool*>(nullptr),

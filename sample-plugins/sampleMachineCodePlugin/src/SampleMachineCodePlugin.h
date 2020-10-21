@@ -70,7 +70,7 @@ public:
   std::string comment()   const override { return "Example of a MachineCode plugin that outputs paths into SVG files. Appropriate for debuging sliced output"; }
   std::string extension() const override { return "DIR"; } // Each layer gets an SVG file. Output to a directory
 
-  bool addMachineCodeSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
+  bool addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
   std::unique_ptr<IMachineCodeInterface> createMachineCode(
     std::unique_ptr<IceSLInterface::ILayerSet>         layers,

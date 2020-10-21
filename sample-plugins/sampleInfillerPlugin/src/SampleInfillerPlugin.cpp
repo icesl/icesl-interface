@@ -128,7 +128,7 @@ bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm
 
 // -----------------------------------------------
 
-bool SampleInfillerPlugin::addInfillerSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
+bool SampleInfillerPlugin::addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   // allocates an array with one value per brush
   m_LineWidth_mm.resize(enumerable_settings.getNumberOfBrushes(),0.4f);

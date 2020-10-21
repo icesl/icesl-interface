@@ -38,6 +38,7 @@ SET(ICESL_SOURCE
   # Plugins
   IInfillerPlugin.h
   IMachineCodePlugin.h
+  IPostProcessingPlugin.h
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})

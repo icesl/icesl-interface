@@ -72,9 +72,6 @@ namespace IceSLInterface
     /// \brief Output file extension
     virtual std::string extension() const = 0;
 
-    /// \brief Implement this function to add printing settings specific to the machine code output format using the EnumerableSettingsInterface interface
-    virtual bool addMachineCodeSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
-
     /// \brief Implement this function to return the machine code writer's implementation of the IMachineCodeInterface interface
     virtual std::unique_ptr<IMachineCodeInterface> createMachineCode(
       std::unique_ptr<IceSLInterface::ILayerSet> layers,

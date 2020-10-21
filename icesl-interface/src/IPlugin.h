@@ -10,7 +10,7 @@
 #pragma once
 
 #include "IPluginEnvironment.h"
-
+#include "EnumerableSettingsInterface.h"
 #include "glux.h"
 
 namespace IceSLInterface
@@ -35,6 +35,9 @@ public:
   /// \brief Perform cleanup here when applicable
   virtual void dispose() = 0;
 
+  /// \brief Add plugin settings to IceSL
+  virtual bool addPluginSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
+
   /// \brief Return the name of the plugin
   virtual std::string name() const = 0;
   /// \brief Return the authors of the plugin
@@ -42,28 +45,13 @@ public:
   /// \brief Return a description of the plugin
   virtual std::string comment() const = 0;
 
-  /// \brief Get the interface version used in the plugin
+  /// \brief Return the interface version used in the plugin
   const std::string& interfaceVersion() { return m_InterfaceVersion; }
 
 private:
   /// \brief Internal. Abstain from using
   const std::string m_InterfaceVersion = InterfaceVersion;
 };
-
-// Signatures of plugin creation and destruction functions
-#ifdef WIN32
-#define ICESL_PLUGIN_API __declspec(dllexport)
-#else
-#define ICESL_PLUGIN_API __attribute__((visibility("default")))
-#endif
-
-#ifdef WIN32
-typedef IPlugin*(__cdecl * CREATEPLUGINFUNC)();
-typedef void (__cdecl * DESTROYPLUGINFUNC)(IPlugin*);
-#else
-typedef IPlugin*(* CREATEPLUGINFUNC)();
-typedef void (* DESTROYPLUGINFUNC)(IPlugin*);
-#endif
 
 /// Signatures of the functions required to create and destroy
 /// the IPlugin object from the host application, typically defined as
@@ -79,6 +67,21 @@ typedef void (* DESTROYPLUGINFUNC)(IPlugin*);
 ///       {
 ///         delete plugin;
 ///       }
+
+#ifdef WIN32
+#define ICESL_PLUGIN_API __declspec(dllexport)
+#else
+#define ICESL_PLUGIN_API __attribute__((visibility("default")))
+#endif
+
+#ifdef WIN32
+typedef IPlugin*(__cdecl * CREATEPLUGINFUNC)();
+typedef void (__cdecl * DESTROYPLUGINFUNC)(IPlugin*);
+#else
+typedef IPlugin*(* CREATEPLUGINFUNC)();
+typedef void (* DESTROYPLUGINFUNC)(IPlugin*);
+#endif
+
 
 // SP and CZ: 2019-09-27: 
 // IMPORTANT!!!

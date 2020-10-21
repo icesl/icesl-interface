@@ -12,6 +12,7 @@
 
 #include <LibSL/LibSL.h>
 #include <string>
+#include <functional>
 
 namespace IceSLInterface
 {

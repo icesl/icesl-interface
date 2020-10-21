@@ -82,10 +82,7 @@ namespace IceSLInterface
     /// \brief Called upon plugin initialization (e.g., resource management, etc)
     bool initialize(IPluginEnvironment &env) override { return true; }
 
-    /// \brief Implement this function to add printing settings specific to the infiller using the EnumerableSettingsInterface interface
-    virtual bool addInfillerSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
-
-    /// \brief Implement this function to return the infiller's inplementation of the IInfillerInterface interface
+    /// \brief Implement this function to return the implementation of the infiller interface
     virtual std::unique_ptr<IInfillerInterface> createInfiller() const = 0;
   };
 
