@@ -33,6 +33,9 @@ namespace IceSLInterface
     /// \brief returns the i-th layer as a generic layer interface
     virtual const ILayer &getLayer(int) const = 0;
 
+    /// \brief returns the i-th layer as a generic layer interface
+    virtual ILayer& getLayer(int) = 0;
+
     /// \brief convert internal coordinates (integer) to build space coordinates
     virtual v2f xyBuildSpace(ClipperLib::IntPoint) const = 0;
 

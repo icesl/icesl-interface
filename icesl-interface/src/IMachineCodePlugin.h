@@ -22,12 +22,12 @@ namespace IceSLInterface
   class IMachineCodeInterface
   {
   public:
-    /// \brief Initialization with the interface to access all printing settings
+    /// \brief Initialization of the interface
     /// \param layers set of layers to output
     /// \param settings interface to IceSL slicing settings
     /// \param used_brushes brushes used in the geometry before slicing
     IMachineCodeInterface(
-      std::unique_ptr<ILayerSet>         layers,
+      std::unique_ptr<const ILayerSet>   layers,
       const EnumerableSettingsInterface* settings,
       const std::set<int>&               used_brushes)
       : m_LayerSet(std::move(layers)), m_EnumerableSettings(settings)
@@ -50,7 +50,7 @@ namespace IceSLInterface
 
   protected:
     /// \brief Set of layers to output
-    std::unique_ptr<ILayerSet> m_LayerSet;
+    std::unique_ptr<const ILayerSet> m_LayerSet;
 
     /// \brief Use this interface to access or add printing settings as well as query # of brushes or extruders (where applicable)
     const EnumerableSettingsInterface* m_EnumerableSettings;
@@ -74,9 +74,9 @@ namespace IceSLInterface
 
     /// \brief Implement this function to return the machine code writer's implementation of the IMachineCodeInterface interface
     virtual std::unique_ptr<IMachineCodeInterface> createMachineCode(
-      std::unique_ptr<IceSLInterface::ILayerSet> layers,
-      const EnumerableSettingsInterface*         settings,
-      const std::set<int>&                       used_brushes) const = 0;
+      std::unique_ptr<const IceSLInterface::ILayerSet> layers,
+      const EnumerableSettingsInterface*               settings,
+      const std::set<int>&                             used_brushes) const = 0;
   };
 
 }

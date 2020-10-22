@@ -18,7 +18,7 @@ class SampleMachineCode : public IceSLInterface::IMachineCodeInterface
 public:
 
   SampleMachineCode(
-    std::unique_ptr<IceSLInterface::ILayerSet>         layers,
+    std::unique_ptr<const IceSLInterface::ILayerSet>   layers,
     const IceSLInterface::EnumerableSettingsInterface* settings,
     const std::set<int>&                               used_brushes)
     : IceSLInterface::IMachineCodeInterface(std::move(layers), settings, used_brushes)
@@ -73,9 +73,9 @@ public:
   bool addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
   std::unique_ptr<IMachineCodeInterface> createMachineCode(
-    std::unique_ptr<IceSLInterface::ILayerSet>         layers,
-    const IceSLInterface::EnumerableSettingsInterface* settings,
-    const std::set<int>&                               used_brushes) const override
+    std::unique_ptr<const IceSLInterface::ILayerSet>         layers,
+    const IceSLInterface::EnumerableSettingsInterface*       settings,
+    const std::set<int>&                                     used_brushes) const override
   {
     return std::unique_ptr<IMachineCodeInterface>(new SampleMachineCode(std::move(layers), settings, used_brushes));
   }
