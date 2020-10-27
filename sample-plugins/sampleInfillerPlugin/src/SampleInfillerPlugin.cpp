@@ -1,5 +1,6 @@
 #include "SampleInfillerPlugin.h"
 #include "Path.h"
+#include "PathTypeBitField.h"
 
 // -----------------------------------------------
 
@@ -52,7 +53,7 @@ void SampleInfiller::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_b
 
 // ----------------------------------------------- 
 
-bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills,bool& preserve_order)
+bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills, bool& preserve_order)
 {
   /// This sample generates a simple concentric fill.
   //
@@ -115,6 +116,7 @@ bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm
       if (cnt.size() > 0) { // some paths may be empty after ClipperLib::CleanPolygons, these have to be skipped
         fills.push_back(std::unique_ptr<IceSLInterface::IPath>(new IceSLInterface::Path()));
         fills.back()->createPath(cnt, true);
+        fills.back()->setPathType(PathType::e_Infill);
         // customize flow
         int flow_idx = fills.back()->addPathAttribute("flow_multiplier");
         fills.back()->setPathAttributeValue(flow_idx, line_width_mm / nozzle_diameter);

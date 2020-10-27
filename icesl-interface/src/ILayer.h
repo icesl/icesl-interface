@@ -74,6 +74,18 @@ namespace IceSLInterface
     /// \brief gets the value of the layer attribute
     virtual void getLayerAttributeValue(int, double &) const = 0;
 
+    /// \brief adds path a the end of this layer
+    virtual void  addPath(const AutoPtr<IPath> path) = 0;
+
+    /// \brief inserts path in position j of this layer
+    virtual void  insertPath(int j, const AutoPtr<IPath> path) = 0;
+
+    /// \brief replaces the path in position j of this layer with path
+    virtual void  replacePath(int j, const AutoPtr<IPath> path) = 0;
+
+    /// \brief removes the path from position j of this layer
+    virtual void  removePath(int j) = 0;
+
   };
 
 }
