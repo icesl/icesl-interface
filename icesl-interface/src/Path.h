@@ -17,7 +17,7 @@
 namespace IceSLInterface
 {
 
-  /// \brief Implements a basic path. Used in return geometry data back to IceSL
+  /// \brief Implements a basic path. Used in returning geometry data back to IceSL
   class Path : public IPath
   {
   protected:
@@ -38,6 +38,11 @@ namespace IceSLInterface
     std::vector< std::vector<double> >    m_PerVertexAttribValues;
 
   public:
+
+    Path() = default;
+
+    /// \brief creats a path from the interface iPath
+    Path(IPath& iPath);
 
     /// \brief returns true if the path is cyclic
     bool isCyclic() const override;
