@@ -1,6 +1,5 @@
 #pragma once
 
-#include "IPlugin.h"
 #include "IMachineCodePlugin.h"
 
 #include <unordered_map>
@@ -58,11 +57,13 @@ public:
   SampleMachineCodePlugin() = default;
   virtual ~SampleMachineCodePlugin() = default;
 
-  bool initialize(IceSLInterface::IPluginEnvironment &env) override {
+  bool initialize(IceSLInterface::IPluginEnvironment& env) override
+  {
     IMachineCodePlugin::initialize(env);
     gluxInit();
     return true;
   }
+
   void dispose() override {}
 
   std::string name()      const override { return "SampleMachineCode"; }

@@ -11,9 +11,9 @@ ENDIF()
 
 INCLUDE(PluginFPIC)
 
-include_directories(
+INCLUDE_DIRECTORIES(
 	${CMAKE_CURRENT_SOURCE_DIR}
-  )
+)
 
 ADD_LIBRARY(sampleInfillerPlugin MODULE
   SampleInfillerPlugin.h

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "IPlugin.h"
 #include "IInfillerPlugin.h"
 
 // -----------------------------------------------
@@ -44,11 +43,13 @@ public:
   SampleInfillerPlugin() = default;
   virtual ~SampleInfillerPlugin() = default;
 
-  bool initialize(IceSLInterface::IPluginEnvironment &env) override {
+  bool initialize(IceSLInterface::IPluginEnvironment& env) override
+  {
     IInfillerPlugin::initialize(env);
     gluxInit();
     return true;
   }
+
   void dispose() override {}
 
   std::string name()    const override { return "SampleInfiller"; }
