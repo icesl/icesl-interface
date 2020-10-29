@@ -35,7 +35,7 @@ SamplePostProcessing::SamplePostProcessing(std::unique_ptr<IceSLInterface::ILaye
       }
     }
   }
-  m_Bbox.enlarge(v2i(static_cast<int>(shield_distance_mm / xy_mm_per_int))); // enlarge it to apply distance to shield
+  m_Bbox = m_Bbox.enlarge(v2i(static_cast<int>(shield_distance_mm / xy_mm_per_int))); // enlarge it to apply distance to shield
 }
 
 // -----------------------------------------------
@@ -45,13 +45,18 @@ bool SamplePostProcessing::postProcessLayers()
   AutoPtr<IceSLInterface::IPath> travel_start = AutoPtr<IceSLInterface::IPath>(new IceSLInterface::Path()); // From extruder position to min corner of bounding square
   AutoPtr<IceSLInterface::IPath> travel_end   = AutoPtr<IceSLInterface::IPath>(new IceSLInterface::Path()); // From min corner of bounding square to extruder position
   AutoPtr<IceSLInterface::IPath> shield       = AutoPtr<IceSLInterface::IPath>(new IceSLInterface::Path()); // Bounding square
-  // Paqth types
+  // Path types
   travel_start->setPathType(PathType::e_Travel);
   travel_end->setPathType(PathType::e_Travel);
   shield->setPathType(PathType::e_Brim); // Bounding square is a type of brim
+  shield->setTool(0);
   // Path calculation
+  static ClipperLib::IntPoint firstPosition;
+  if (m_LayerSet->getLayer(m_ProcessedLayers).getNumPaths() != 0) {
+    firstPosition = m_LayerSet->getLayer(m_ProcessedLayers).getPath(0).getVertexPos(0);
+  }
   ClipperLib::Path path;
-  path.emplace_back(m_LastPosition); // Extruder position
+  path.emplace_back(firstPosition); // Extruder position
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]); // Min corner of bounding square
   travel_start->createPath(path, false);
   std::reverse(path.begin(), path.end()); // Min corner of bounding square -> etruder position
@@ -61,16 +66,11 @@ bool SamplePostProcessing::postProcessLayers()
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.maxCorner()[1]);
   path.emplace_back(m_Bbox.maxCorner()[0], m_Bbox.maxCorner()[1]);
   path.emplace_back(m_Bbox.maxCorner()[0], m_Bbox.minCorner()[1]);
-  path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]);
   shield->createPath(path, true); // Bounding square
   // Insert new paths
   m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_end);
   m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
   m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_start);
-  // Update last position
-  int nPaths     = m_LayerSet->getLayer(m_ProcessedLayers).getNumPaths();
-  int nVertices  = m_LayerSet->getLayer(m_ProcessedLayers).getPath(nPaths - 1).getNumVertices();
-  m_LastPosition = m_LayerSet->getLayer(m_ProcessedLayers).getPath(nPaths - 1).getVertexPos(nVertices - 1);
   // done?
   return ++m_ProcessedLayers == m_LayerSet->getNumLayers();
 }

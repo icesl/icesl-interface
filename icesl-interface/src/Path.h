@@ -26,6 +26,8 @@ namespace IceSLInterface
     bool             m_IsCyclic = false;
     /// \brief path type bitfield
     uint             m_TypeBits = 0;
+    /// \brief extruder used in path
+    int              m_Tool;
     /// \brief path outline
     ClipperLib::Path m_Path;
     /// \brief path attributes
@@ -49,6 +51,9 @@ namespace IceSLInterface
 
     /// \brief return the extruder used for the path
     int getTool() const override;
+
+    /// \brief sets the extruder used for the path
+    void setTool(int t) override;
 
     /// \brief returns the path type bitfield
     uint getPathType() const override;

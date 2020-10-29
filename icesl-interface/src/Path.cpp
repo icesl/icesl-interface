@@ -20,6 +20,7 @@ Path::Path(IPath& iPath)
 {
   m_IsCyclic = iPath.isCyclic();
   m_TypeBits = iPath.getPathType();
+  m_Tool     = iPath.getTool();
   m_Path.resize(iPath.getNumVertices());
   ForIndex(i, iPath.getNumVertices()) {
     m_Path[i] = iPath.getVertexPos(i);
@@ -57,7 +58,14 @@ bool Path::isCyclic() const
 
 int Path::getTool() const
 {
-  return -1;
+  return m_Tool;
+}
+
+// --------------------------------------------------------
+
+void Path::setTool(int t)
+{
+  m_Tool = t;
 }
 
 // --------------------------------------------------------

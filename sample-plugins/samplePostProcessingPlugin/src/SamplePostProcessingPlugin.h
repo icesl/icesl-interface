@@ -62,6 +62,6 @@ public:
 
 private:
 
-  float m_ShieldDistance_mm     = 0.5f;
-  float m_ShieldDistance_min_mm = 0.1f;
+  float m_ShieldDistance_mm     = 5.0f;
+  float m_ShieldDistance_min_mm = 1.0f;
 };

@@ -49,6 +49,9 @@ namespace IceSLInterface
     /// \brief return the extruder used for the path
     virtual int getTool() const = 0;
 
+    /// \brief sets the extruder used for the path
+    virtual void setTool(int t) = 0;
+
     /// \brief returns the path type bitfield. The output of this function is enumerated in file 'PathTypeBitField.h'
     virtual uint getPathType() const = 0;
 
