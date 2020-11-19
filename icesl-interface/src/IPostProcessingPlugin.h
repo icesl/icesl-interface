@@ -65,5 +65,14 @@ namespace IceSLInterface
     virtual std::unique_ptr<IPostProcessingInterface> createPostProcessing(
       std::unique_ptr<ILayerSet> layers,
       const IceSLInterface::EnumerableSettingsInterface* settings) const = 0;
+
+    /// \brief Called by IceSL to set into m_InternalName the printing setting's internal name assigned to this plugin (do not use)
+    void setInternalName(const std::string& internal_name) { m_InternalName = internal_name; }
+
+  protected:
+    /// \brief Printing setting's internal name assigned by IceSL to this plugin 
+    std::string m_InternalName;
   };
+
+
 }

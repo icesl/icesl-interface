@@ -90,11 +90,11 @@ bool SamplePostProcessingPlugin::addPluginSettings(IceSLInterface::EnumerableSet
     &m_ShieldDistance_mm, &m_ShieldDistance_min_mm, static_cast<float*>(nullptr),
     "shield_distance_to_print_mm", "Distance from shield to print (mm)", "Processing",
     "Specifies the distance in millimeters (mm) between\nthe square shield and the print silhouette.",
-    2,
+    1000,
     [this, &enumerable_settings]() -> bool {
-      std::string post_processing_algorithm;
-      enumerable_settings.getSettingByName("post_processing_algorithm")->getValue(post_processing_algorithm);
-      return post_processing_algorithm == this->name();
+      bool plugin_activated;
+      enumerable_settings.getSettingByName(m_InternalName)->getValue(plugin_activated);
+      return plugin_activated;
     }
   );
   return s != nullptr;
