@@ -44,6 +44,8 @@ public:
   virtual std::string author() const = 0;
   /// \brief Return a description of the plugin
   virtual std::string comment() const = 0;
+  /// \brief Return the plugin's GUID. Abstain from using
+  virtual std::string guid() const { return std::string(); }
 
   /// \brief Return the interface version used in the plugin
   const std::string& interfaceVersion() { return m_InterfaceVersion; }
