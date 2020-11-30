@@ -50,6 +50,7 @@ bool SamplePostProcessing::postProcessLayers()
   travel_end->setPathType(PathType::e_Travel);
   shield->setPathType(PathType::e_Brim); // Bounding square is a type of brim
   shield->setTool(0);
+
   // Path calculation
   static ClipperLib::IntPoint firstPosition;
   if (m_LayerSet->getLayer(m_ProcessedLayers).getNumPaths() != 0) {
@@ -60,17 +61,22 @@ bool SamplePostProcessing::postProcessLayers()
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]); // Min corner of bounding square
   travel_start->createPath(path, false);
   std::reverse(path.begin(), path.end()); // Min corner of bounding square -> etruder position
-  travel_start->createPath(path, false);
+  travel_end->createPath(path, false);
   path.clear();
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]);
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.maxCorner()[1]);
   path.emplace_back(m_Bbox.maxCorner()[0], m_Bbox.maxCorner()[1]);
   path.emplace_back(m_Bbox.maxCorner()[0], m_Bbox.minCorner()[1]);
   shield->createPath(path, true); // Bounding square
+
   // Insert new paths
-  m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_end);
-  m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
-  m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_start);
+  try {
+    m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_end);
+    m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
+    m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_start);
+  } catch (std::string msg) {
+    std::cerr << msg << std::endl;
+  }
   // done?
   return ++m_ProcessedLayers == m_LayerSet->getNumLayers();
 }
