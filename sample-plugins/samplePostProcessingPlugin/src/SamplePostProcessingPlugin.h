@@ -60,8 +60,14 @@ public:
     return std::unique_ptr<IPostProcessingInterface>(new SamplePostProcessing(std::move(layers), settings));
   }
 
+  bool insertTravelPaths() const override { return s_IceSLTravelCalculation; }
+
 private:
 
   float m_ShieldDistance_mm     = 5.0f;
   float m_ShieldDistance_min_mm = 1.0f;
+
+public:
+
+  static const bool s_IceSLTravelCalculation; // Should IceSL should take care of traveling?
 };

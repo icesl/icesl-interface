@@ -66,6 +66,11 @@ namespace IceSLInterface
       std::unique_ptr<ILayerSet> layers,
       const IceSLInterface::EnumerableSettingsInterface* settings) const = 0;
 
+    /// \brief Specify whether IceSL calculates and inserts the travel paths necessary for the output of this plugin
+    ///        If set to false, the plugin is responsible for the insertion of the travel paths that guarantees the
+    ///        correct printing of the added deposition from this plugin
+    virtual bool insertTravelPaths() const = 0;
+
     /// \brief Called by IceSL to set into m_InternalName the printing setting's internal name assigned to this plugin (do not use)
     void setInternalName(const std::string& internal_name) { m_InternalName = internal_name; }
 

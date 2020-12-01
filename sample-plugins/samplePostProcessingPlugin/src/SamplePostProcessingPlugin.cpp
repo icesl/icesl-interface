@@ -56,12 +56,17 @@ bool SamplePostProcessing::postProcessLayers()
   if (m_LayerSet->getLayer(m_ProcessedLayers).getNumPaths() != 0) {
     firstPosition = m_LayerSet->getLayer(m_ProcessedLayers).getPath(0).getVertexPos(0);
   }
+  // Travel
+  // SP 01-12-2020: Although the plugin can instruct IceSl to automatically calculate and insert the travel paths necessary for the
+  //                added deposition of this plugin (see constant SamplePostProcessingPlugin::s_IceSLTravelCalculation). Travel paths
+  //                are calculated here as a way to exemplify how they could be calculated and properly inserted.
   ClipperLib::Path path;
   path.emplace_back(firstPosition); // Extruder position
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]); // Min corner of bounding square
   travel_start->createPath(path, false);
   std::reverse(path.begin(), path.end()); // Min corner of bounding square -> etruder position
   travel_end->createPath(path, false);
+  // Shield
   path.clear();
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]);
   path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.maxCorner()[1]);
@@ -71,9 +76,13 @@ bool SamplePostProcessing::postProcessLayers()
 
   // Insert new paths
   try {
-    m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_end);
-    m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
-    m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_start);
+    if (SamplePostProcessingPlugin::s_IceSLTravelCalculation) { // Insert only shield if IceSL is supposed to take care of traveling
+      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
+    } else {
+      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_end);
+      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
+      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_start);
+    }
   } catch (std::string msg) {
     std::cerr << msg << std::endl;
   }
@@ -87,6 +96,10 @@ float SamplePostProcessing::postProcessingProgress() const
 {
   return static_cast<float>(m_ProcessedLayers) / static_cast<float>(m_LayerSet->getNumLayers());
 }
+
+// -----------------------------------------------
+
+const bool SamplePostProcessingPlugin::s_IceSLTravelCalculation = false;
 
 // -----------------------------------------------
 
