@@ -46,11 +46,14 @@ public:
   bool initialize(IceSLInterface::IPluginEnvironment& env) override
   {
     IInfillerPlugin::initialize(env);
+    ImGui::SetCurrentContext(env.getImGuiContext());
     gluxInit();
     return true;
   }
 
   void dispose() override {}
+
+  void gui(bool postService) override {}
 
   std::string name()    const override { return "SampleInfiller"; }
   std::string author()  const override { return "Cédric Zanni, Salim Perchy and Sylvain Lefebvre"; }

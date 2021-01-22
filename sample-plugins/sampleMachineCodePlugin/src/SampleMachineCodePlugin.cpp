@@ -3,6 +3,7 @@
 #include "PathTypeBitField.h"
 
 #include <LibSL/System/System.h>
+#include <imgui.h>
 #include <iomanip>
 
 // -----------------------------------------------
@@ -216,6 +217,12 @@ bool SampleMachineCodePlugin::addPluginSettings(IceSLInterface::EnumerableSettin
     }
   );
   return s != nullptr;
+}
+
+// -----------------------------------------------
+
+void SampleMachineCodePlugin::gui(bool postService)
+{
 }
 
 // -----------------------------------------------

@@ -60,11 +60,14 @@ public:
   bool initialize(IceSLInterface::IPluginEnvironment& env) override
   {
     IMachineCodePlugin::initialize(env);
+    ImGui::SetCurrentContext(env.getImGuiContext());
     gluxInit();
     return true;
   }
 
   void dispose() override {}
+
+  void gui(bool postService) override;
 
   std::string name()      const override { return "SampleMachineCode"; }
   std::string author()    const override { return "Salim Perchy"; }

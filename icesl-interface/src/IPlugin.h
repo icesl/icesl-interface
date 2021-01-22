@@ -35,9 +35,13 @@ public:
   /// \brief Perform cleanup here when applicable
   virtual void dispose() = 0;
 
+  /// \brief Show GUI (i.e., ImGui routines)
+  /// \param postService service (e.g., slicing) has finished
+  virtual void gui(bool postService) = 0;
+
   /// \brief Add plugin settings to IceSL
   virtual bool addPluginSettings(EnumerableSettingsInterface& enumerable_settings) = 0;
-
+  
   /// \brief Return the name of the plugin
   virtual std::string name() const = 0;
   /// \brief Return the authors of the plugin

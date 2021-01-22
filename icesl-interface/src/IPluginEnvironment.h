@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <imgui.h>
+
 namespace IceSLInterface
 {
 
@@ -21,9 +23,13 @@ namespace IceSLInterface
    */
   class IPluginEnvironment
   {
+    ImGuiContext* m_ImGuiContext = nullptr;
   public:
     IPluginEnvironment() = default;
     virtual ~IPluginEnvironment() = default;
+
+    void setImGuiContext(ImGuiContext* ctx) { m_ImGuiContext = ctx; }
+    ImGuiContext* getImGuiContext() const { return m_ImGuiContext; }
   };
 
   // ----------------------------------------------------------------
