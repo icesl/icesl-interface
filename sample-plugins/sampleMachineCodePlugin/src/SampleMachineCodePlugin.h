@@ -1,8 +1,10 @@
 #pragma once
 
 #include "IMachineCodePlugin.h"
-
+#include <LibSL/LibSL_gl4core.h>
+#include "sh_simplerender.h"
 #include <unordered_map>
+#include <imgui.h>
 
 // -----------------------------------------------
 
@@ -16,20 +18,32 @@ class SampleMachineCode : public IceSLInterface::IMachineCodeInterface
 {
 public:
 
+  using mvf_simplegeometry = GPUMESH_MVF1(mvf_vertex_3f);
+  using t_SimpleGeometry   = GPUMesh_VertexBuffer<mvf_simplegeometry>;
+
   SampleMachineCode(
     std::unique_ptr<const IceSLInterface::ILayerSet>   layers,
     const IceSLInterface::EnumerableSettingsInterface* settings,
-    const std::set<int>&                               used_brushes)
-    : IceSLInterface::IMachineCodeInterface(std::move(layers), settings, used_brushes)
+    const std::set<int>&                               used_brushes,
+    std::vector<RenderTarget2DRGBA_Ptr>&               slices_RT
+    )
+    : IceSLInterface::IMachineCodeInterface(std::move(layers), settings, used_brushes), m_SlicesRT(slices_RT)
   {
     std::string nOfDigits = std::to_string(std::to_string(m_LayerSet->getNumLayers()).size());
     m_OuputFileFormat = "%s/layer_%0" + nOfDigits + "d.svg"; // [output_folder]/layer_[layer_number].svg
     m_FirstLayer   = 0;
     m_LastLayer    = m_LayerSet->getNumLayers();
     m_WritingLayer = -1;
+    m_VAO = std::unique_ptr<t_SimpleGeometry>(new t_SimpleGeometry());
+    m_Shader = std::unique_ptr<AutoBindShader::sh_simplerender>(new AutoBindShader::sh_simplerender());
+    m_Shader->init();
+    m_SlicesRT.clear();
   }
 
-  virtual ~SampleMachineCode() override = default;
+  virtual ~SampleMachineCode() override
+  {
+    m_Shader->terminate();
+  }
 
   bool startWriting(const std::string& filename) override;
   bool stepWriting() override;
@@ -46,6 +60,13 @@ private:
   AAB<2>    m_TightSquare;
   bool      m_OutputTravel;
   static std::unordered_map<std::string, v3f> m_StrokeColors;
+
+  // Members to render slices unto GPU textures
+  bool m_DoneSlicesRT = false;
+  v2f m_BedSize;
+  std::vector<RenderTarget2DRGBA_Ptr>&             m_SlicesRT;
+  std::unique_ptr<t_SimpleGeometry>                m_VAO;
+  std::unique_ptr<AutoBindShader::sh_simplerender> m_Shader;
 };
 
 class SampleMachineCodePlugin : public IceSLInterface::IMachineCodePlugin
@@ -79,14 +100,16 @@ public:
   std::unique_ptr<IMachineCodeInterface> createMachineCode(
     std::unique_ptr<const IceSLInterface::ILayerSet>         layers,
     const IceSLInterface::EnumerableSettingsInterface*       settings,
-    const std::set<int>&                                     used_brushes) const override
+    const std::set<int>&                                     used_brushes) override
   {
-    return std::unique_ptr<IMachineCodeInterface>(new SampleMachineCode(std::move(layers), settings, used_brushes));
+    m_ShowGui = true;
+    return std::unique_ptr<IMachineCodeInterface>(new SampleMachineCode(std::move(layers), settings, used_brushes, m_SlicesRT));
   }
 
 private:
-
+  bool m_ShowGui = true;
   bool m_OutputTravel = false;
+  std::vector<RenderTarget2DRGBA_Ptr> m_SlicesRT;
 };
 
 // -----------------------------------------------

@@ -18,6 +18,13 @@ INCLUDE_DIRECTORIES(
 ADD_LIBRARY(sampleMachineCodePlugin MODULE
   SampleMachineCodePlugin.h
   SampleMachineCodePlugin.cpp
+  sh_simplerender.fp
+  sh_simplerender.vp
+  sh_simplerender.h
+)
+
+AUTO_BIND_SHADERS(
+  sh_simplerender
 )
 
 IF(NOT EMSCRIPTEN)

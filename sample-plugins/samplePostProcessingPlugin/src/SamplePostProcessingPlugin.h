@@ -58,7 +58,7 @@ public:
 
   std::unique_ptr<IPostProcessingInterface> createPostProcessing(
     std::unique_ptr<IceSLInterface::ILayerSet>         layers,
-    const IceSLInterface::EnumerableSettingsInterface* settings) const override
+    const IceSLInterface::EnumerableSettingsInterface* settings) override
   {
     return std::unique_ptr<IPostProcessingInterface>(new SamplePostProcessing(std::move(layers), settings));
   }

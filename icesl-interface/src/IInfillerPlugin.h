@@ -83,7 +83,7 @@ namespace IceSLInterface
     bool initialize(IPluginEnvironment &env) override { return true; }
 
     /// \brief Implement this function to return the implementation of the infiller interface
-    virtual std::unique_ptr<IInfillerInterface> createInfiller() const = 0;
+    virtual std::unique_ptr<IInfillerInterface> createInfiller() = 0;
   };
 
 }

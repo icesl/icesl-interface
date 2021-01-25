@@ -3,7 +3,6 @@
 #include "PathTypeBitField.h"
 
 #include <LibSL/System/System.h>
-#include <imgui.h>
 #include <iomanip>
 
 // -----------------------------------------------
@@ -100,6 +99,9 @@ bool SampleMachineCode::startWriting(const std::string& filename)
     m_WritingLayer = m_FirstLayer;
     m_OutputDirectory = filename;
     m_EnumerableSettings->getSettingByName("svg_machine_code_output_travel")->getValue(m_OutputTravel);
+
+    m_EnumerableSettings->getSettingByName("bed_size_x_mm")->getValue(m_BedSize[0]);
+    m_EnumerableSettings->getSettingByName("bed_size_y_mm")->getValue(m_BedSize[1]);
    
   } catch (Fatal& f) {
     std::cerr << f.message() << std::endl;
@@ -167,11 +169,62 @@ bool SampleMachineCode::stepWriting()
         svg.endPath(true);
       }
 
+      // Prepare the OpenGL render target for this layer
+      travelPaths.clear();
+      GLint currentViewport[4];
+      glGetIntegerv(GL_VIEWPORT, currentViewport); // save viewport
+      m_SlicesRT.emplace_back(new RenderTarget2DRGBA(static_cast<uint>(m_BedSize[0]), static_cast<uint>(m_BedSize[1])));
+      RenderTarget2DRGBA_Ptr RT = m_SlicesRT.back();
+      RT->bind();
+      glViewport(0, 0, RT->w(), RT->h());
+      LibSL::GPUHelpers::clearScreen(LIBSL_COLOR_BUFFER | LIBSL_DEPTH_BUFFER, 1.0f, 1.0f, 1.0f, 1.0f);
+      m_Shader->begin();
+      m_Shader->t_matrix.set(m4x4f::identity());
+      m_Shader->p_matrix.set(orthoMatrixGL(0.0f, m_BedSize[0], -m_BedSize[1], 0.0f, -1.0f, 1.0f));
+      // Render the layer unto the render target
+      for (int p = 0; p < layer.getNumPaths(); p++) {
+        const IceSLInterface::IPath& path = layer.getPath(p);
+        std::string pathType = (spiral ? "Spiral" : pathTypetoStr(path.getPathType()));
+        if (pathType == "Travel" || pathType == "Retract") {
+          if (!m_OutputTravel) continue; // No travel output
+          travelPaths.push_back(&path);
+          continue;
+        }
+        v3f strokeColor = m_StrokeColors.at(pathType);
+        m_Shader->u_color.set(v4f(strokeColor, 1.0f));
+        m_VAO->begin(GPUMESH_LINESTRIP);
+        for (int v = 0; v < path.getNumVertices(); v++) {
+          v2f point = m_LayerSet->xyBuildSpace(path.getVertexPos(v)); // build position
+          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to (Y is flipped)
+          m_VAO->vertex_3(point[0], point[1], 0.0f);
+        }
+        m_VAO->end();
+        m_VAO->render();
+      }
+      //  Render the travel unto the render target
+      for (const IceSLInterface::IPath* path : travelPaths) {
+        v3f strokeColor = m_StrokeColors.at(pathTypetoStr(path->getPathType()));
+        m_Shader->u_color.set(v4f(strokeColor, 1.0f));
+        m_VAO->begin(GPUMESH_LINESTRIP);
+        for (int v = 0; v < path->getNumVertices(); v++) {
+          v2f point = m_LayerSet->xyBuildSpace(path->getVertexPos(v)); // build position
+          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to (Y is flipped)
+          m_VAO->vertex_3(point[0], point[1], 0.0f);
+        }
+        m_VAO->end();
+        m_VAO->render();
+      }
+      // --
+      m_Shader->end();
+      RT->unbind();
+      glViewport(currentViewport[0], currentViewport[1], currentViewport[2], currentViewport[3]); // restore viewport
+
       // Next layer
       m_WritingLayer++;
 
     } else {
       // done
+      m_DoneSlicesRT = true;
       return false;
     }
 
@@ -221,8 +274,25 @@ bool SampleMachineCodePlugin::addPluginSettings(IceSLInterface::EnumerableSettin
 
 // -----------------------------------------------
 
-void SampleMachineCodePlugin::gui(bool postService)
+void SampleMachineCodePlugin::gui(bool)
 {
+  if (!m_ShowGui) {
+    // SP 2021-01-25: IMPORTANT!
+    // OpenGL resources used by ImGui should be released before being reference by any ImGui call (e.g., ImGui::Image)
+    // so that when ImGui renders, it won't rerefence deleted textures. Hence why clearing m_SlicesRT is before creating the GUI
+    m_SlicesRT.clear();
+  }
+  if (!m_SlicesRT.empty()) {
+    static int shown_slice = 0;
+    ImGui::SetNextWindowSize(ImVec2(0, 0));
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight() * 2), ImGuiCond_Once);
+    ImGui::Begin("SampleMachineCodePlugin", &m_ShowGui);
+    RenderTarget2DRGBA_Ptr SliceTex = m_SlicesRT.at(shown_slice);
+    ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<size_t>(SliceTex->texture())), ImVec2(static_cast<float>(SliceTex->w()), static_cast<float>(SliceTex->h())));
+    ImGui::Separator();
+    ImGui::SliderInt("Layer", &shown_slice, 0, m_SlicesRT.size() - 1);
+    ImGui::End();
+  }
 }
 
 // -----------------------------------------------

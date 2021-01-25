@@ -64,7 +64,7 @@ namespace IceSLInterface
     /// \brief Implement this function to return the implementation of the post-processing interface 
     virtual std::unique_ptr<IPostProcessingInterface> createPostProcessing(
       std::unique_ptr<ILayerSet> layers,
-      const IceSLInterface::EnumerableSettingsInterface* settings) const = 0;
+      const IceSLInterface::EnumerableSettingsInterface* settings) = 0;
 
     /// \brief Specify whether IceSL calculates and inserts the travel paths necessary for the output of this plugin
     ///        If set to false, the plugin is responsible for the insertion of the travel paths that guarantees the

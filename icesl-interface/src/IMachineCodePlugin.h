@@ -76,7 +76,7 @@ namespace IceSLInterface
     virtual std::unique_ptr<IMachineCodeInterface> createMachineCode(
       std::unique_ptr<const ILayerSet>    layers,
       const EnumerableSettingsInterface*  settings,
-      const std::set<int>&                used_brushes) const = 0;
+      const std::set<int>&                used_brushes) = 0;
   };
 
 }
