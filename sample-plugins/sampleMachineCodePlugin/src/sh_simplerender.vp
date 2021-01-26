@@ -1,0 +1,21 @@
+#ifdef Emscripten
+#version 300 es
+#else
+#version 430 core
+#endif
+
+// SP 2018-03-26
+
+in  vec3 mvf_vertex;
+
+out vec4 color;
+
+uniform mat4 t_matrix; // transformation matrix (i.e. view_matrix * model_matrix)
+uniform mat4 p_matrix; // projection matrix
+uniform vec4 u_color;  // color
+
+void main()
+{
+	color		= u_color;
+	gl_Position = p_matrix * t_matrix * vec4(mvf_vertex, 1.0);
+}
