@@ -96,6 +96,14 @@ bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm
     }
     s->getValue(line_width_mm);
   }
+  /// set fill percentage
+  {
+    auto s = m_EnumerableSettings->getSettingByName("infill_percentage_" + std::to_string(brush));
+    if (s == nullptr) {
+      throw Fatal("Missing setting");
+    }
+    s->setValue(100.0f);
+  }
   /// generate paths
   float radius = line_width_mm / 2.0f;
   ClipperLib::Paths current = surface;

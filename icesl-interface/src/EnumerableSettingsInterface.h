@@ -63,6 +63,13 @@ namespace IceSLInterface
       virtual void getValue(float& value)       const = 0;
       virtual void getValue(std::string& value) const = 0;
 
+      /// \brief set constant setting value based on type, undefined behavior if the setting
+      /// does not have the right type.
+      virtual void setValue(bool value)        = 0;
+      virtual void setValue(int value)         = 0;
+      virtual void setValue(float value)       = 0;
+      virtual void setValue(std::string value) = 0;
+
       /// \brief get the setting's type, unit and flags
       virtual e_Type  getType()  const = 0;
       virtual e_Units getUnits() const = 0;
