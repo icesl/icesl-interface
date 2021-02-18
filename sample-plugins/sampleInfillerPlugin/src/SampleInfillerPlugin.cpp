@@ -48,7 +48,19 @@ void SampleInfiller::terminateInfill(int brush)
 
 void SampleInfiller::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_box, float height_mm, double thickness_mm, int brush)
 {
-
+  // Create function to convert from processing space into build space
+  sl_assert(m_EnumerableSettings != nullptr);
+  float xy_mm_per_int;
+  v2f bed_size, bed_offset, processing_center = v2f(xy_slice_box.center());
+  m_EnumerableSettings->getSettingByName("xy_mm_per_int")->getValue(xy_mm_per_int);
+  m_EnumerableSettings->getSettingByName("bed_size_x_mm")->getValue(bed_size[0]);
+  m_EnumerableSettings->getSettingByName("bed_size_y_mm")->getValue(bed_size[1]);
+  m_EnumerableSettings->getSettingByName("bed_part_offset_x_mm")->getValue(bed_offset[0]);
+  m_EnumerableSettings->getSettingByName("bed_part_offset_y_mm")->getValue(bed_offset[1]);
+  m_xyBuildSpaceFnc = [xy_mm_per_int, bed_size, bed_offset, processing_center](ClipperLib::IntPoint p) -> v2f
+  {
+    return v2f(static_cast<float>(p.X), static_cast<float>(p.Y)) * xy_mm_per_int - processing_center * xy_mm_per_int - bed_offset + 0.5f * bed_size;
+  };
 }
 
 // ----------------------------------------------- 

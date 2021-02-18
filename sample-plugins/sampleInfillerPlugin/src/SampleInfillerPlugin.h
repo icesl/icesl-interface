@@ -32,6 +32,10 @@ public:
   // called to generate the infill in a surface
   bool generateInfill(int id, float layer_height_mm, double layer_thickness_mm, int brush, const ClipperLib::Paths &surface, std::vector<std::unique_ptr<IceSLInterface::IPath> > &fills,bool &preserve_order) override;
 
+private:
+  // transforms processing space coordinates (clipper points) into build space (machine language coordinates)
+  std::function<v2f(ClipperLib::IntPoint)> m_xyBuildSpaceFnc;
+
 };
 
 class SampleInfillerPlugin : public IceSLInterface::IInfillerPlugin
