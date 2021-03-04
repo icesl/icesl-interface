@@ -290,7 +290,7 @@ void SampleMachineCodePlugin::gui(bool)
     RenderTarget2DRGBA_Ptr SliceTex = m_SlicesRT.at(shown_slice);
     ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<size_t>(SliceTex->texture())), ImVec2(static_cast<float>(SliceTex->w()), static_cast<float>(SliceTex->h())));
     ImGui::Separator();
-    ImGui::SliderInt("Layer", &shown_slice, 0, m_SlicesRT.size() - 1);
+    ImGui::SliderInt("Layer", &shown_slice, 0, static_cast<int>(m_SlicesRT.size()) - 1);
     ImGui::End();
   }
 }
