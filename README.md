@@ -33,7 +33,7 @@ Make sure you're using the latest interface as well as the latest version of Ice
 3. Checkout the submodules:
     1. `git submodule sync --recursive`
     2. `git submodule update --init --recursive`
-    3. `git submodule foreach checkout master`
+    3. `git submodule foreach git checkout master`
     4. `git submodule foreach git pull`
 4. Execute CMake on the repo:
     * Either use CMake-gui on the _IceSL-Interface_ folder.
