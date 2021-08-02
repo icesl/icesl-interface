@@ -18,97 +18,39 @@ void destroyPlugin(IceSLInterface::IPlugin* plugin)
 
 // -----------------------------------------------
 
-SamplePostProcessing::SamplePostProcessing(std::unique_ptr<IceSLInterface::ILayerSet> layers, const IceSLInterface::EnumerableSettingsInterface* settings)
-: IceSLInterface::IPostProcessingInterface(std::move(layers), settings)
+SamplePostProcessing::SamplePostProcessing(const IceSLInterface::EnumerableSettingsInterface* settings)
+: IceSLInterface::IPostProcessingInterface(settings)
 {
-  float shield_distance_mm, xy_mm_per_int;
-  m_EnumerableSettings->getSettingByName("shield_distance_to_print_mm")->getValue(shield_distance_mm);
-  m_EnumerableSettings->getSettingByName("xy_mm_per_int")->getValue(xy_mm_per_int);
-  m_LastPosition = ClipperLib::IntPoint(0, 0);
-  // Calculate bounding square for the layer
-  ForIndex(l, m_LayerSet->getNumLayers()) {
-    ForIndex(p, m_LayerSet->getLayer(l).getNumPaths()) {
-      ForIndex(v, m_LayerSet->getLayer(l).getPath(p).getNumVertices()) {
-        m_Bbox.addPoint(v2i(
-          static_cast<int>(m_LayerSet->getLayer(l).getPath(p).getVertexPos(v).X),
-          static_cast<int>(m_LayerSet->getLayer(l).getPath(p).getVertexPos(v).Y)));
+  m_EnumerableSettings->getSettingByName("flow_multiplier_perimeter")->getValue(m_flow_multiplier_perimeter);
+}
+
+// -----------------------------------------------
+
+bool SamplePostProcessing::postProcessLayer(const int, const int, const bool, const v2i&, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer)
+{
+  // Increase perimeters of 
+  for (size_t i = 0; i < _layer.size(); i++) {
+    if (_layer[i]->getPathType() & PathType::e_Perimeter) { // only perimeters
+      std::shared_ptr<IceSLInterface::IPath> path(new IceSLInterface::Path(*_layer[i])); // clone path (IceSL created paths can't be modified)
+      int attr_idx = path->getPathAttributeIndex("flow_multiplier"); // flow multiplier already exists
+      if (attr_idx < 0) {
+        return false; // flow multiplier doesn't exist!
       }
+      path->setPathAttributeValue(attr_idx, m_flow_multiplier_perimeter); // customize it
+      _layer[i] = path; // replace obsolete IceSL path with out new perimeter
     }
   }
-  m_Bbox = m_Bbox.enlarge(v2i(static_cast<int>(shield_distance_mm / xy_mm_per_int))); // enlarge it to apply distance to shield
+  return true; // succesfull
 }
-
-// -----------------------------------------------
-
-bool SamplePostProcessing::postProcessLayers()
-{
-  AutoPtr<IceSLInterface::IPath> travel_start = AutoPtr<IceSLInterface::IPath>(new IceSLInterface::Path()); // From extruder position to min corner of bounding square
-  AutoPtr<IceSLInterface::IPath> travel_end   = AutoPtr<IceSLInterface::IPath>(new IceSLInterface::Path()); // From min corner of bounding square to extruder position
-  AutoPtr<IceSLInterface::IPath> shield       = AutoPtr<IceSLInterface::IPath>(new IceSLInterface::Path()); // Bounding square
-  // Path types
-  travel_start->setPathType(PathType::e_Travel);
-  travel_end->setPathType(PathType::e_Travel);
-  shield->setPathType(PathType::e_Brim); // Bounding square is a type of brim
-  shield->setTool(0);
-
-  // Path calculation
-  static ClipperLib::IntPoint firstPosition;
-  if (m_LayerSet->getLayer(m_ProcessedLayers).getNumPaths() != 0) {
-    firstPosition = m_LayerSet->getLayer(m_ProcessedLayers).getPath(0).getVertexPos(0);
-  }
-  // Travel
-  // SP 01-12-2020: Although the plugin can instruct IceSl to automatically calculate and insert the travel paths necessary for the
-  //                added deposition of this plugin (see constant SamplePostProcessingPlugin::s_IceSLTravelCalculation). Travel paths
-  //                are calculated here as a way to exemplify how they could be calculated and properly inserted.
-  ClipperLib::Path path;
-  path.emplace_back(firstPosition); // Extruder position
-  path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]); // Min corner of bounding square
-  travel_start->createPath(path, false);
-  std::reverse(path.begin(), path.end()); // Min corner of bounding square -> etruder position
-  travel_end->createPath(path, false);
-  // Shield
-  path.clear();
-  path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.minCorner()[1]);
-  path.emplace_back(m_Bbox.minCorner()[0], m_Bbox.maxCorner()[1]);
-  path.emplace_back(m_Bbox.maxCorner()[0], m_Bbox.maxCorner()[1]);
-  path.emplace_back(m_Bbox.maxCorner()[0], m_Bbox.minCorner()[1]);
-  shield->createPath(path, true); // Bounding square
-
-  // Insert new paths
-  try {
-    if (SamplePostProcessingPlugin::s_IceSLTravelCalculation) { // Insert only shield if IceSL is supposed to take care of traveling
-      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
-    } else {
-      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_end);
-      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, shield);
-      m_LayerSet->getLayer(m_ProcessedLayers).insertPath(0, travel_start);
-    }
-  } catch (std::string msg) {
-    std::cerr << msg << std::endl;
-  }
-  // done?
-  return ++m_ProcessedLayers == m_LayerSet->getNumLayers();
-}
-
-// -----------------------------------------------
-
-float SamplePostProcessing::postProcessingProgress() const
-{
-  return static_cast<float>(m_ProcessedLayers) / static_cast<float>(m_LayerSet->getNumLayers());
-}
-
-// -----------------------------------------------
-
-const bool SamplePostProcessingPlugin::s_IceSLTravelCalculation = false;
 
 // -----------------------------------------------
 
 bool SamplePostProcessingPlugin::addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   auto s = enumerable_settings.addSettingFromPlugin(
-    &m_ShieldDistance_mm, &m_ShieldDistance_min_mm, static_cast<float*>(nullptr),
-    "shield_distance_to_print_mm", "Distance from shield to print (mm)", "Processing",
-    "Specifies the distance in millimeters (mm) between\nthe square shield and the print silhouette.",
+    &m_FlowMultiplierPerimeter, &m_FlowMultiplierPerimeter_min, &m_FlowMultiplierPerimeter,
+    "flow_multiplier_perimeter", "Flow multiplier (perimeters)", "Processing",
+    "Specifies a flow multiplier that only applies for perimeters.",
     1000,
     [this, &enumerable_settings]() -> bool {
       bool plugin_activated;

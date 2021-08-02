@@ -46,6 +46,9 @@ namespace IceSLInterface
     /// \brief returns true if the path is cyclic
     virtual bool isCyclic() const = 0;
 
+    /// \brief return if the path comes form a plugin
+    virtual bool isCustom() const = 0;
+
     /// \brief return the extruder used for the path
     virtual int getTool() const = 0;
 

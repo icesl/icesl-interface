@@ -23,27 +23,20 @@ namespace IceSLInterface
 
     /// \brief Initialization of the interface
     /// \param layers set of layers to post-process
-    IPostProcessingInterface(
-      std::unique_ptr<ILayerSet>         layers,
-      const EnumerableSettingsInterface* settings)
-      : m_LayerSet(std::move(layers)), m_EnumerableSettings(settings)
-    {}
+    IPostProcessingInterface(const EnumerableSettingsInterface* settings) : m_EnumerableSettings(settings) {}
 
     virtual ~IPostProcessingInterface() = default;
 
-    /// \brief PostProcess layer.
-    /// \param layers
-    /// \result true if done processing all layers (i.e., interface won't be called anymore)
-    virtual bool postProcessLayers() = 0;
-
-    /// \brief Progess of post-processing all layers
-    /// \result decimal in the interval [0-1] as a normalized percentage of progess
-    virtual float postProcessingProgress() const = 0;
+    /// \brief PostProcess layer on a per-extruder basis. This function is called by IceSL for each layer (top to bottom) for each extruder that deposits material.
+    /// \param extruder extruder used in subset '_layer' of the whole layer
+    /// \param layerID layer number
+    /// \param spiral if layer is to be spiralized
+    /// \param start starting point of layer
+    /// \param layer subset of layer to post-process (add paths + reorder existing paths)
+    /// \result true post-processing succesfull
+    virtual bool postProcessLayer(const int extruder, const int layerID, const bool spiral, const v2i& start, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer) = 0;
 
   protected:
-
-    /// \brief Set of layers to post-process
-    std::unique_ptr<ILayerSet> m_LayerSet;
 
     /// \brief Use this interface to access or add printing settings as well as query # of brushes or extruders (where applicable)
     const EnumerableSettingsInterface* m_EnumerableSettings;
@@ -62,14 +55,7 @@ namespace IceSLInterface
     bool initialize(IPluginEnvironment& env) override { return true; }
 
     /// \brief Implement this function to return the implementation of the post-processing interface 
-    virtual std::unique_ptr<IPostProcessingInterface> createPostProcessing(
-      std::unique_ptr<ILayerSet> layers,
-      const IceSLInterface::EnumerableSettingsInterface* settings) = 0;
-
-    /// \brief Specify whether IceSL calculates and inserts the travel paths necessary for the output of this plugin
-    ///        If set to false, the plugin is responsible for the insertion of the travel paths that guarantees the
-    ///        correct printing of the added deposition from this plugin
-    virtual bool insertTravelPaths() const = 0;
+    virtual std::unique_ptr<IPostProcessingInterface> createPostProcessing(const IceSLInterface::EnumerableSettingsInterface* settings) = 0;
 
     /// \brief Called by IceSL to set into m_InternalName the printing setting's internal name assigned to this plugin (do not use)
     void setInternalName(const std::string& internal_name) { m_InternalName = internal_name; }

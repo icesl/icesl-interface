@@ -31,7 +31,7 @@ Path::Path(IPath& iPath)
   for (const std::string& attrib : attribs) {
     m_Attribs[attrib] = static_cast<int>(m_AttribValues.size());
     m_AttribValues.push_back(0);
-    iPath.getPathAttributeValue(iPath.getPerVertexAttributeIndex(attrib), m_AttribValues.back());
+    iPath.getPathAttributeValue(iPath.getPathAttributeIndex(attrib), m_AttribValues.back());
   }
   // PerVertex attributes
   std::vector<std::string> pervertexAttribs;
@@ -52,6 +52,13 @@ Path::Path(IPath& iPath)
 bool Path::isCyclic() const
 {
   return m_IsCyclic;
+}
+
+// --------------------------------------------------------
+
+bool Path::isCustom() const
+{
+  return true;
 }
 
 // --------------------------------------------------------

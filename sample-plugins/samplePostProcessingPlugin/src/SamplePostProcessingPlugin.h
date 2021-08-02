@@ -12,21 +12,14 @@ extern "C" ICESL_PLUGIN_API void destroyPlugin(IceSLInterface::IPlugin * plugin)
 class SamplePostProcessing : public IceSLInterface::IPostProcessingInterface
 {
 public:
-  SamplePostProcessing(
-    std::unique_ptr<IceSLInterface::ILayerSet>         layers,
-    const IceSLInterface::EnumerableSettingsInterface* settings);
+  SamplePostProcessing(const IceSLInterface::EnumerableSettingsInterface* settings);
 
   virtual ~SamplePostProcessing() override = default;
 
-  bool postProcessLayers() override;
-
-  float postProcessingProgress() const override;
+  bool postProcessLayer(const int extruder, const int layerID, const bool spiral, const v2i& start, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer) override;
 
 private:
-  int   m_ProcessedLayers = 0;
-
-  AAB<2, int>          m_Bbox;
-  ClipperLib::IntPoint m_LastPosition;
+  float m_flow_multiplier_perimeter = 0;
 };
 
 class SamplePostProcessingPlugin : public IceSLInterface::IPostProcessingPlugin
@@ -52,25 +45,18 @@ public:
 
   std::string name()    const override { return "SamplePostProcessingPlugin"; }
   std::string author()  const override { return "Salim Perchy"; }
-  std::string comment() const override { return "Example of a post-processing plugin that creates a squared shield around the printed part"; }
+  std::string comment() const override { return "Example of a post-processing plugin that applies a flow multiplier to perimeters"; }
 
   bool addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
-  std::unique_ptr<IPostProcessingInterface> createPostProcessing(
-    std::unique_ptr<IceSLInterface::ILayerSet>         layers,
-    const IceSLInterface::EnumerableSettingsInterface* settings) override
+  std::unique_ptr<IPostProcessingInterface> createPostProcessing(const IceSLInterface::EnumerableSettingsInterface* settings) override
   {
-    return std::unique_ptr<IPostProcessingInterface>(new SamplePostProcessing(std::move(layers), settings));
+    return std::unique_ptr<IPostProcessingInterface>(new SamplePostProcessing(settings));
   }
-
-  bool insertTravelPaths() const override { return s_IceSLTravelCalculation; }
 
 private:
 
-  float m_ShieldDistance_mm     = 5.0f;
-  float m_ShieldDistance_min_mm = 1.0f;
-
-public:
-
-  static const bool s_IceSLTravelCalculation; // Should IceSL should take care of traveling?
+  float m_FlowMultiplierPerimeter     = 1.0f;
+  float m_FlowMultiplierPerimeter_max = 2.0f;
+  float m_FlowMultiplierPerimeter_min = 0.0f;
 };

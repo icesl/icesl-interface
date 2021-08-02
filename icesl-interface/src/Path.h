@@ -49,6 +49,9 @@ namespace IceSLInterface
     /// \brief returns true if the path is cyclic
     bool isCyclic() const override;
 
+    /// \brief return if the path comes form a plugin
+    bool isCustom() const override;
+
     /// \brief return the extruder used for the path
     int getTool() const override;
 
