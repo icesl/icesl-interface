@@ -38,7 +38,7 @@ public:
     const ClipperLib::Paths &surface,
     std::vector<std::unique_ptr<IceSLInterface::IPath> > &fills,
     bool &preserve_order,
-    ClipperLib::Paths &fallback_surface) override;
+    ClipperLib::Paths &_fallback_surface) override;
 
 private:
   // transforms processing space coordinates (clipper points) into build space (machine language coordinates)

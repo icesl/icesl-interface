@@ -62,7 +62,7 @@ namespace IceSLInterface
       const ClipperLib::Paths &surface,
       std::vector<std::unique_ptr<IPath> > &fills,
       bool                                 &preserve_order,
-      ClipperLib::Paths &fallback_surface) = 0;
+      ClipperLib::Paths                    &_fallback_surface) = 0;
 
   protected:
 
