@@ -61,7 +61,8 @@ namespace IceSLInterface
       int    brush,
       const ClipperLib::Paths &surface,
       std::vector<std::unique_ptr<IPath> > &fills,
-      bool                                 &preserve_order) = 0;
+      bool                                 &preserve_order,
+      ClipperLib::Paths &fallback_surface) = 0;
 
   protected:
 

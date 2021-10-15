@@ -65,7 +65,7 @@ void SampleInfiller::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_b
 
 // ----------------------------------------------- 
 
-bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills, bool& preserve_order)
+bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm, int brush, const ClipperLib::Paths& surface, std::vector<std::unique_ptr<IceSLInterface::IPath> >& fills, bool& preserve_order, ClipperLib::Paths& fallback_surface)
 {
   /// This sample generates a simple concentric fill.
   //
