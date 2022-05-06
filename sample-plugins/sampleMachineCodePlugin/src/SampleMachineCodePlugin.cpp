@@ -279,7 +279,7 @@ void SampleMachineCodePlugin::gui(bool)
   if (!m_ShowGui) {
     // SP 2021-01-25: IMPORTANT!
     // OpenGL resources used by ImGui should be released before being reference by any ImGui call (e.g., ImGui::Image)
-    // so that when ImGui renders, it won't rerefence deleted textures. Hence why clearing m_SlicesRT is before creating the GUI
+    // so that when ImGui renders, it won't rerefence deleted textures. Hence why clearing m_SlicesRT is done before creating the GUI
     m_SlicesRT.clear();
   }
   if (!m_SlicesRT.empty()) {

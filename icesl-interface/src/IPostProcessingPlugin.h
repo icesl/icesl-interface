@@ -10,7 +10,7 @@
 #pragma once 
 
 #include "IPlugin.h"
-#include "ILayerSet.h"
+#include "IPath.h"
 
 #include "EnumerableSettingsInterface.h"
 
@@ -33,7 +33,7 @@ namespace IceSLInterface
     /// \param spiral if layer is to be spiralized
     /// \param start starting point of layer
     /// \param layer subset of layer to post-process (add paths + reorder existing paths)
-    /// \result true post-processing succesfull
+    /// \result true post-processing succesful
     virtual bool postProcessLayer(const int extruder, const int layerID, const bool spiral, const v2i& start, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer) = 0;
 
   protected:

@@ -49,6 +49,8 @@ void SampleInfiller::terminateInfill(int brush)
 void SampleInfiller::prepareInfillForSlice(int id, const AAB<2, int>& xy_slice_box, float height_mm, double thickness_mm, int brush)
 {
   // Create function to convert from processing space into build space
+  // This function isn't used here but it's provided rather as a way to show how the plugin
+  // can transform from the processing space (i.e., slicing) to build space (i.e., GCode)
   sl_assert(m_EnumerableSettings != nullptr);
   float xy_mm_per_int;
   v2f bed_size, bed_offset, processing_center = v2f(xy_slice_box.center());
@@ -119,12 +121,12 @@ bool SampleInfiller::generateInfill(int id, float height_mm, double thickness_mm
   /// generate paths
   float radius = line_width_mm / 2.0f;
   ClipperLib::Paths current = surface;
-  while (1) {
+  while (true) {
     ClipperLib::ClipperOffset offseter;
     offseter.AddPaths(current, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
     ClipperLib::Paths contours;
     offseter.Execute(contours, - radius / xy_mm_per_int);
-    // next uses nozzle diameter as spacing
+    // next uses line width as spacing
     radius = line_width_mm;
     // if result of offset is empty stop
     if (contours.empty()) {

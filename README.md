@@ -70,4 +70,4 @@ For minimal details not covered here, please try first looking how it was done i
         * Once a setting as been queried, you can get its value, type or other information using the `EnumerableSettingsInterface::SettingInterface` interface.
     * To add a setting, use the function `addSettingFromPlugin` or `addSelectionFromPlugin`.
 * For resources that are only used during execution invervals (e.g., each slice, execution of a lua function) try to manage them in the intermadiate plugin interface mentioned above.
-* All source interfaces (e.g., `IPlugin`, `IInfillerPlugin`, `IInfillerInterface`, `IPath`) are properly documented in the source files. If something is not completely clear, try reading this comments.
+* All source interfaces (e.g., `IPlugin`, `IInfillerPlugin`, `IInfillerInterface`, `IPath`) are properly documented in the source files. If something is not completely clear, try reading these comments.

@@ -28,8 +28,7 @@ SamplePostProcessing::SamplePostProcessing(const IceSLInterface::EnumerableSetti
 
 bool SamplePostProcessing::postProcessLayer(const int, const int, const bool, const v2i&, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer)
 {
-  // Increase perimeters of 
-  for (size_t i = 0; i < _layer.size(); i++) {
+  for (size_t i = 0; i < _layer.size(); i++) { // go through layer
     if (_layer[i]->getPathType() & PathType::e_Perimeter) { // only perimeters
       std::shared_ptr<IceSLInterface::IPath> path(new IceSLInterface::Path(*_layer[i])); // clone path (IceSL created paths can't be modified)
       int attr_idx = path->getPathAttributeIndex("flow_multiplier"); // flow multiplier already exists

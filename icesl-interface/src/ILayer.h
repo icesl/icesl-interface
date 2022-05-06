@@ -65,7 +65,7 @@ namespace IceSLInterface
     /// \brief returns the layer attributes names
     virtual void getLayerAttributes(std::vector<std::string> &) const = 0;
 
-    /// \brief returns the index of the layer attributes, -1 if unknown
+    /// \brief returns the index of the layer attribute, -1 if unknown
     virtual int  getLayerAttributeIndex(const std::string &) const = 0;
 
     /// \brief gets the value of the layer attribute
