@@ -28,7 +28,7 @@ namespace IceSLInterface
     /**
      * @brief Slicing settings types, units and flags.
      */
-    enum e_Type { e_Empty, e_Float, e_Int, e_Bool, e_Text, e_Select, e_Ratios, e_Field, e_Button, e_OverhangPointList };
+    enum e_Type { e_Empty, e_Float, e_Int, e_Bool, e_Text, e_Select, e_Ratios, e_Field, e_Button, e_OverhangPointList, e_Frame };
     enum e_Units { e_NoUnit, e_MM, e_CDegrees, e_MMperSec, e_Percent, e_Zoning, e_Angle };
     enum e_Flags {
       e_NoFlag = 0,
