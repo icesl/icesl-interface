@@ -59,7 +59,7 @@ namespace IceSLInterface
     /// \brief returns the i-th path as a generic path interface
     virtual const IPath &getPath(int) const = 0;
 
-    /// \brieg return wheter the layer is a spiralized (uninterrupted) path
+    /// \brieg returns whether the layer is a spiralized (uninterrupted) path
     virtual bool isSpiral() const = 0;
 
     /// \brief returns the layer attributes names
