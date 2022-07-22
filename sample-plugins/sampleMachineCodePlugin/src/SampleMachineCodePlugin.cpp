@@ -89,7 +89,7 @@ bool SampleMachineCode::startWriting(const std::string& filename)
         nozzleDiameter = std::max(nozzle, nozzleDiameter);
         for (int v = 0; v < path.getNumVertices(); v++) {
           v2f point = m_LayerSet->xyBuildSpace(path.getVertexPos(v)); // build position
-          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to accomodate for SVG coordinate system (Y is flipped)
+          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to accommodate for SVG coordinate system (Y is flipped)
           m_TightSquare.addPoint(point);
         }
       }
@@ -150,12 +150,12 @@ bool SampleMachineCode::stepWriting()
         svg.startPath();
         for (int v = 0; v < path.getNumVertices(); v++) {
           v2f point = m_LayerSet->xyBuildSpace(path.getVertexPos(v)); // build position
-          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to accomodate for SVG coordinate system (Y is flipped)
+          point = v2f(LibSL::Math::quatf(v3f(1, 0, 0), (float)M_PI).toMatrix() * v4f(point[0], point[1], 0, 1)); // Rotate 180 in X to accommodate for SVG coordinate system (Y is flipped)
           svg.addPoint(point[0], point[1]);
         }
         svg.endPath(true);
       }
-      // Travel paths drawn later so they are always visible
+      // Travel paths drawn afterwards to make them visible
       for (const IceSLInterface::IPath* path : travelPaths)  {
         sl_assert(path != nullptr);
         v3f strokeColor = m_StrokeColors.at(pathTypetoStr(path->getPathType()));
