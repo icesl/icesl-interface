@@ -12,7 +12,7 @@ This is the official repository of IceSL plugins' interface. This document detai
 
 ## Disclaimer
 
-This repository is **private** and isn't open to the **general public**. If you have encountered/downloaded this repo without the author's permission, we kindly ask you to report it to [The MFX team](mailto:mfx@inria.fr).
+This repository is **private** and isn't open to the **general public**. If you have encountered/downloaded this repo without permission, we kindly ask you to report it to [The MFX team](mailto:mfx@inria.fr).
 
 ## The Interface
 
