@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2020, INRIA
+ *  Copyright (c) 2023, Inria
  *  All rights reserved.
  *
  *  IceSL plugin interface
