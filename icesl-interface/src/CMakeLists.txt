@@ -3,7 +3,6 @@ PROJECT(IceSL-Interface)
 
 INCLUDE_DIRECTORIES (
 	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}/../include
 )
 
 ADD_DEFINITIONS(-DASIO_STANDALONE )
@@ -35,10 +34,12 @@ SET(ICESL_SOURCE
   Path.cpp
   ILayer.h
   ILayerSet.h
+  ISlicingPlan.h
   # Plugins
   IInfillerPlugin.h
   IMachineCodePlugin.h
   IPostProcessingPlugin.h
+  IMeshSlicerPlugin.h
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2020, INRIA
+ *  Copyright (c) 2023, Inria
  *  All rights reserved.
  *
  *  IceSL plugin interface
@@ -11,4 +11,4 @@
 
 #include "IPlugin.h"
 
-const std::string IceSLInterface::InterfaceVersion = "0.10";
+const std::string IceSLInterface::InterfaceVersion = "0.11";
