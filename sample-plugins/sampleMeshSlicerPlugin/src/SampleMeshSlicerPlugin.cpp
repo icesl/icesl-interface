@@ -405,9 +405,15 @@ unsigned int SampleMeshSlicer::getCurrentProcessingStep() const
 float SampleMeshSlicer::getCurrentProcessingStepProgress() const
 {
   if (m_CurrentStep == SampleMeshSlicer::e_Step::e_Rendering) {
-    return static_cast<float>(m_CurrentLayerProcessed) / static_cast<float>(m_NumOfLayers);
+    return
+      (static_cast<float>(SampleMeshSlicer::e_Step::e_Rendering) / static_cast<float>(SampleMeshSlicer::e_Step::size)) + // overall progress
+      ((1.0f / static_cast<float>(SampleMeshSlicer::e_Step::size)) *                        // step progress
+        (static_cast<float>(m_CurrentLayerProcessed) / static_cast<float>(m_NumOfLayers))); // inter-step progress
   } else if (m_CurrentStep == SampleMeshSlicer::e_Step::e_Vectorizing) {
-    return static_cast<float>(m_CurrentLayerProcessed) / static_cast<float>(m_NumOfLayers);
+    return 
+      (static_cast<float>(SampleMeshSlicer::e_Step::e_Vectorizing) / static_cast<float>(SampleMeshSlicer::e_Step::size)) + // overall progress
+      ((1.0f / static_cast<float>(SampleMeshSlicer::e_Step::size)) *                        // step progress
+        (static_cast<float>(m_CurrentLayerProcessed) / static_cast<float>(m_NumOfLayers))); // inter-step progress
   } else {
     sl_assert(false);
     return 0;
