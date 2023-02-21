@@ -20,6 +20,10 @@ namespace IceSLInterface
 /**
  * @brief The IPlugin class is the common interface to all plugins, it contains
  * functionality for initialization and cleaning of resources.
+ * 
+ * Exception handling is processed by IceSL only with exceptions of type Fatal.
+ * E.g.,
+ * throw(Fatal("[MyPlugin] Error processing myPlugin"));
  */
 class IPlugin
 {

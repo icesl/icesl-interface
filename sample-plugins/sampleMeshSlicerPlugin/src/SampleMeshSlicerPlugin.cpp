@@ -20,6 +20,13 @@ void destroyPlugin(IceSLInterface::IPlugin* plugin)
 
 // -----------------------------------------------
 
+SampleMeshSlicer::~SampleMeshSlicer()
+{
+  std::cerr << std::endl;
+}
+
+// -----------------------------------------------
+
 std::string genFilename(const std::string folder, const std::string name, const std::string ext, unsigned int layer_id, unsigned int max_layers)
 {
   std::stringstream filename;
@@ -46,7 +53,11 @@ void SampleMeshSlicer::startSlicing(const IceSLInterface::ISlicingPlan* slicing_
   bbox.minCorner() = bbox.minCorner() / m_MMperIntPlugin;
   bbox.maxCorner() = bbox.maxCorner() / m_MMperIntPlugin;
   bbox = bbox.enlarge(1.0f / m_MMperIntPlugin); // add a 1mm space to the borders of the render target to leave some blank space
-  m_RenderTarget = std::unique_ptr<SampleMeshSlicer::RTFormat>(new SampleMeshSlicer::RTFormat(static_cast<uint>(bbox.extent()[0]), static_cast<uint>(bbox.extent()[1])));
+  try {
+    m_RenderTarget = std::unique_ptr<SampleMeshSlicer::RTFormat>(new SampleMeshSlicer::RTFormat(static_cast<uint>(bbox.extent()[0]), static_cast<uint>(bbox.extent()[1])));
+  } catch (...) {
+    throw(Fatal(std::string("[SampleMeshSlicerPlugin] Error intializing GPU memory used for slicing").c_str())); // IceSL can only handle exceptions of type Fatal
+  }
   // -> render shader
   m_Shader = std::unique_ptr<AutoBindShader::sh_simplerender>(new AutoBindShader::sh_simplerender()); // simple rendering shader
   m_Shader->init();
@@ -151,7 +162,17 @@ void SampleMeshSlicer::rasterizedLayer(unsigned int layer_id)
   m_RenderTarget->unbind();
 
   // -> allocate memory for rasterized layer
-  m_Images.emplace_back(new SampleMeshSlicer::IMGFormat(m_RenderTarget->w(), m_RenderTarget->h()));
+  try {
+    m_Images.emplace_back(new SampleMeshSlicer::IMGFormat(m_RenderTarget->w(), m_RenderTarget->h()));
+  } catch (std::bad_alloc error) {
+    std::stringstream error_msg;
+    error_msg << "[SampleMeshSlicerPlugin] Error allocating memory for layer image no. ";
+    error_msg << layer_id;
+    error_msg << " with size ";
+    error_msg << (m_RenderTarget->w() * m_RenderTarget->h()) / 1024.0f;
+    error_msg << "Mb.";
+    Fatal(error_msg.str().c_str()); // IceSL can only handle exception of type Fatal
+  }
   // -> tarnsfer rasteization from GPU to CPU memory
   m_RenderTarget->readBack(m_Images.back()->pixels()); // read back rasterized layer from render target
 
@@ -438,7 +459,18 @@ std::string SampleMeshSlicer::getCurrentProcessingStepDescription() const
 
 bool SampleMeshSlicerPlugin::addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
+  m_EnumerableSettings = &enumerable_settings;
   return true;
+}
+
+// -----------------------------------------------
+
+std::unique_ptr<IceSLInterface::IMeshSlicerInterface> SampleMeshSlicerPlugin::createMeshSlicer()
+{
+  std::unique_ptr<IceSLInterface::IMeshSlicerInterface> mesh_slicer = std::unique_ptr<IceSLInterface::IMeshSlicerInterface>(new SampleMeshSlicer());
+  sl_assert(m_EnumerableSettings != nullptr);
+  mesh_slicer->setSettings(m_EnumerableSettings);
+  return mesh_slicer;
 }
 
 // -----------------------------------------------

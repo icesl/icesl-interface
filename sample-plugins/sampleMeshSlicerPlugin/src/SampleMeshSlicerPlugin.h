@@ -19,7 +19,7 @@ class SampleMeshSlicer : public IceSLInterface::IMeshSlicerInterface
 public:
 
   SampleMeshSlicer() = default;
-  virtual ~SampleMeshSlicer() = default;
+  virtual ~SampleMeshSlicer();
 
   void startSlicing(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh) override;
 
@@ -30,7 +30,7 @@ public:
   std::vector<std::vector<IceSLInterface::Contour>>&       slices()       { return m_Slices; }
   const std::vector<std::vector<IceSLInterface::Contour>>& slices() const { return m_Slices; }
 
-  unsigned int getNumOfProcessingSteps()           const override;
+  unsigned int getNumOfProcessingSteps()            const override;
 
   unsigned int getCurrentProcessingStep()           const override;
 
@@ -101,9 +101,6 @@ public:
 
   bool addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
-  std::unique_ptr<IMeshSlicerInterface> createMeshSlicer() override
-  {
-    return std::unique_ptr<IMeshSlicerInterface>(new SampleMeshSlicer());
-  }
+  std::unique_ptr<IMeshSlicerInterface> createMeshSlicer() override;
 
 };
