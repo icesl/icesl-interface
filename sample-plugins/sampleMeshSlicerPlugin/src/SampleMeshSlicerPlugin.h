@@ -6,6 +6,10 @@
 
 #include "sh_simplerender.h"
 
+#include <mutex>
+#include <future>
+#include <list>
+
 // -----------------------------------------------
 
 extern "C" ICESL_PLUGIN_API IceSLInterface::IPlugin * createPlugin();
@@ -44,9 +48,16 @@ private:
 
   enum class e_Step { e_Rendering, e_Vectorizing, size }; // slicing steps
 
-  e_Step       m_CurrentStep;           // current slicing step
-  unsigned int m_CurrentLayerProcessed; // current layer being sliced
-  unsigned int m_NumOfLayers;           // total number of layers to slice
+  e_Step       m_CurrentStep;             // current slicing step
+  unsigned int m_NumOfLayers;             // total number of layers to slice
+  unsigned int m_CurrentLayerProcessed;   // current layer being sliced
+  unsigned int m_LayersVectorized;        // number of layers vectorized
+
+  const bool   m_MultithreadPlugin = true;             // parallelize plugin
+  std::mutex   m_SlicesMutex;                          // mutex to lock slices when copying data to it
+  std::list<std::future<void>> m_VectorizationThreads; // layer vectorization threads;
+  unsigned int m_MaxNumberOfThreads = std::thread::hardware_concurrency() - 1; // max number of concurrent futures (leave one core for IceSL!)
+
 
   const IceSLInterface::ISlicingPlan* m_SlicingPlan = nullptr; // slicing plan
   TriangleMesh_Ptr& m_Mesh = TriangleMesh_Ptr();               // mesh to slice

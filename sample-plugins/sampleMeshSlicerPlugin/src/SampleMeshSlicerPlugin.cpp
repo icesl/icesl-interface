@@ -3,6 +3,7 @@
 LIBSL_WIN32_FIX;
 
 #include <iomanip>
+#include <chrono>
 
 // -----------------------------------------------
 
@@ -22,7 +23,10 @@ void destroyPlugin(IceSLInterface::IPlugin* plugin)
 
 SampleMeshSlicer::~SampleMeshSlicer()
 {
-  std::cerr << std::endl;
+  // correctly terminate any threads started by this plugin
+  for (const auto& thread : m_VectorizationThreads) {
+    thread.wait();
+  }
 }
 
 // -----------------------------------------------
@@ -224,8 +228,7 @@ void SampleMeshSlicer::vectorizeLayer(unsigned int layer_id)
 #endif
 
   // -> vectorize contours
-  m_Slices.emplace_back();
-  auto& layer_vect = m_Slices.back();
+  std::vector<IceSLInterface::Contour> layer_vect;
   const unsigned char start = 100;
   const unsigned char visited = 101;
 
@@ -346,7 +349,7 @@ void SampleMeshSlicer::vectorizeLayer(unsigned int layer_id)
 #if 0 // DEBUG: dump layer vectorization
   LibSL::SvgHelpers::Svg dump(genFilename("dump", "layer_vectorization", "svg", layer_id, m_NumOfLayers).c_str());
   dump.setProperties("#000000", "none", 10.0f);
-  for (const auto& contour : m_Slices.back()) {
+  for (const auto& contour : layer_vect) {
     dump.startPath();
     for (const auto& point : contour.outline()) {
       dump.addPoint(static_cast<float>(point[0]), static_cast<float>(point[1]));
@@ -368,6 +371,11 @@ void SampleMeshSlicer::vectorizeLayer(unsigned int layer_id)
       point  = point * v2i(static_cast<int>(factor));
     }
   }
+
+  // add to vector of vectorized layers
+  // Note: We probably don't need a lock here as elements of m_Slices are not accessed concurrently (one element per thread) and m_Slices is already resized!
+  std::lock_guard<std::mutex> lock(m_SlicesMutex);
+  m_Slices.at(layer_id) = layer_vect;
 }
 
 // -----------------------------------------------
@@ -378,6 +386,8 @@ bool SampleMeshSlicer::processSlicing()
 
     if (m_CurrentLayerProcessed == m_NumOfLayers) { // check if next step is due
       m_CurrentStep = SampleMeshSlicer::e_Step::e_Vectorizing;
+      m_Slices.resize(m_NumOfLayers);
+      m_LayersVectorized = 0;
       m_CurrentLayerProcessed = 0;
     } else {
       // rasterize layer and continue
@@ -386,14 +396,34 @@ bool SampleMeshSlicer::processSlicing()
 
   } else if (m_CurrentStep == SampleMeshSlicer::e_Step::e_Vectorizing) {
 
-    if (m_CurrentLayerProcessed == m_NumOfLayers) { // check if done
+    if (m_LayersVectorized == m_NumOfLayers) { // check if done
       m_Images.clear(); // free up memory
       m_Shader->terminate();
       m_RenderTarget->clear();
       return true;
     } else {
-      // vectorize layer
-      vectorizeLayer(m_CurrentLayerProcessed++);
+      if (m_MultithreadPlugin) {
+        // check if vectorizing threads have finished
+        std::future_status thread_status;
+        for (auto it = m_VectorizationThreads.begin(); it != m_VectorizationThreads.end();) {
+          thread_status = it->wait_for(std::chrono::seconds{ 0 });
+          if (thread_status == std::future_status::ready) {
+            it = m_VectorizationThreads.erase(it); // remove dead thread
+            ++m_LayersVectorized;
+          } else {
+            ++it;
+          }
+        }
+        // launch vectorizartion threads as long as there are layers to vectorize
+        while (m_CurrentLayerProcessed - m_LayersVectorized < m_MaxNumberOfThreads && m_CurrentLayerProcessed < m_NumOfLayers) {
+          m_VectorizationThreads.push_back(std::async(std::launch::async, [this](int layer) { vectorizeLayer(layer); }, m_CurrentLayerProcessed++));
+        }
+        // sanity check
+        sl_assert(m_VectorizationThreads.size() <= m_MaxNumberOfThreads);
+      } else {
+        vectorizeLayer(m_CurrentLayerProcessed++);
+        m_LayersVectorized++;
+      }
     }
   }
   return false;
