@@ -489,7 +489,6 @@ std::string SampleMeshSlicer::getCurrentProcessingStepDescription() const
 
 bool SampleMeshSlicerPlugin::addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
-  m_EnumerableSettings = &enumerable_settings;
   return true;
 }
 
@@ -497,10 +496,7 @@ bool SampleMeshSlicerPlugin::addPluginSettings(IceSLInterface::EnumerableSetting
 
 std::unique_ptr<IceSLInterface::IMeshSlicerInterface> SampleMeshSlicerPlugin::createMeshSlicer()
 {
-  std::unique_ptr<IceSLInterface::IMeshSlicerInterface> mesh_slicer = std::unique_ptr<IceSLInterface::IMeshSlicerInterface>(new SampleMeshSlicer());
-  sl_assert(m_EnumerableSettings != nullptr);
-  mesh_slicer->setSettings(m_EnumerableSettings);
-  return mesh_slicer;
+  return std::unique_ptr<IceSLInterface::IMeshSlicerInterface>(new SampleMeshSlicer());
 }
 
 // -----------------------------------------------

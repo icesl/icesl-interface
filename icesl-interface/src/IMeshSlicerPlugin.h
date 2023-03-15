@@ -48,7 +48,7 @@ namespace IceSLInterface
     /// The plugin should clean up any resources active at invocation of the constructor (e.g., memory, threads, etc)
     virtual ~IMeshSlicerInterface() = default;
 
-    /// \brief Save the interface to access all printing settings
+    /// \brief Called by IceSL to save the settings interface
     void setSettings(const EnumerableSettingsInterface* settings) { m_EnumerableSettings = settings; }
 
     /// \brief Start the process of slicing a mesh with respect to a slicing plan
@@ -138,10 +138,12 @@ namespace IceSLInterface
     /// \brief Implement this function to return the implementation of the post-processing interface 
     virtual std::unique_ptr<IMeshSlicerInterface> createMeshSlicer() = 0;
 
+    /// \brief Called by IceSL to get/set the settings interface
+    void setSettings(const EnumerableSettingsInterface* settings) { m_EnumerableSettings = settings; }
+    const EnumerableSettingsInterface* getSettings() { return m_EnumerableSettings; }
   protected:
 
-    /// \brief This should only be used as a buffer to pass the settings' interface to the plugin inteface.
-    ///        It is supposed to be set to its real value in 'addPluginSettings' and passed to the slicer plugin in 'createMeshSlicer'
+    /// \brief This is only used as a buffer to pass the settings' interface to the plugin inteface.
     const EnumerableSettingsInterface* m_EnumerableSettings = nullptr;
   };
 
