@@ -25,11 +25,11 @@ public:
   SampleMeshSlicer() = default;
   virtual ~SampleMeshSlicer();
 
-  void startSlicing(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh) override;
+  void startSlicing(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh, const int brush) override;
 
   bool processSlicing() override;
 
-  void slice(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh) override;
+  void slice(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh, const int brush) override;
 
   std::vector<std::vector<IceSLInterface::Contour>>&       slices()       { return m_Slices; }
   const std::vector<std::vector<IceSLInterface::Contour>>& slices() const { return m_Slices; }

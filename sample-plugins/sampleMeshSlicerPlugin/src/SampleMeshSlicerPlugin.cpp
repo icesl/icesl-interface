@@ -40,7 +40,7 @@ std::string genFilename(const std::string folder, const std::string name, const 
 
 // -----------------------------------------------
 
-void SampleMeshSlicer::startSlicing(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh)
+void SampleMeshSlicer::startSlicing(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh, const int)
 {
   sl_assert(slicing_plan != nullptr && mesh.raw() != nullptr);
 
@@ -431,9 +431,9 @@ bool SampleMeshSlicer::processSlicing()
 
 // -----------------------------------------------
 
-void SampleMeshSlicer::slice(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh)
+void SampleMeshSlicer::slice(const IceSLInterface::ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh, const int brush)
 {
-  SampleMeshSlicer::startSlicing(slicing_plan, mesh);
+  SampleMeshSlicer::startSlicing(slicing_plan, mesh, brush);
   while (!processSlicing()) { continue; }
 }
 

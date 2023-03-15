@@ -54,12 +54,13 @@ namespace IceSLInterface
     /// \brief Start the process of slicing a mesh with respect to a slicing plan
     /// \param slicing_plan slicing plan to use
     /// \param mesh mesh to slice 
+    /// \param brush brush number containing the mesh to slice
     /// 
     /// Calling this method renders the object ready to commence a slicing process of a certain mesh.
     /// Subsequent calls to 'processSlicing' calculate progressively the resulting slices.
     /// Calling to 'slice' after this method nulifies it.
     /// 
-    virtual void startSlicing(const ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh) = 0;
+    virtual void startSlicing(const ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh, const int brush) = 0;
 
     /// \brief Advance the slicing process progressively
     /// \return true if slicing is done, false otherwise
@@ -72,12 +73,13 @@ namespace IceSLInterface
     /// \brief Slice mesh with respecto to a slicing plan
     /// \param slicing_plan slicing plan to use
     /// \param mesh mesh to slice 
+    /// \param brush brush number containing the mesh to slice
     /// 
     /// Executes until slicing is done. Results are stored inside the object and can be accessed with method 'contours'.
     /// One call to this method is sufficient to complete the slicing process. 
     /// 
     /// 
-    virtual void slice(const ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh) = 0;
+    virtual void slice(const ISlicingPlan* slicing_plan, TriangleMesh_Ptr& mesh, const int brush) = 0;
 
     /// \brief Queries result after slicing mesh
     /// \return Slices containing the resulting clockwise contours
