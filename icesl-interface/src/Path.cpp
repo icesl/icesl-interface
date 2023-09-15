@@ -8,7 +8,6 @@
  */
 
 // SL 2020-09-07
-#pragma once
 
 #include <Path.h>
 
