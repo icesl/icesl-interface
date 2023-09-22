@@ -29,9 +29,15 @@ namespace IceSLInterface
     /// \brief Sets the total number of slices, before any path is generated
     virtual void setNumSlices(int num) = 0;
 
-    /// \brief Sets the world space information, before any path is generated
+    /// \brief Sets the coordinate space information, before any path is generated
     /// This allows to go from build space to world space, for instance to query per-layer or field parameters.
-    virtual void setWorldSpace(v3f world_corner_mm, v3f extent_mm) = 0;
+    virtual void setCoordSpaces(
+      v3f processing_world_corner_mm,
+      v3f processing_extent_mm,
+      v3f tight_world_corner_mm,
+      v3f tight_extent_mm,
+      v3f toolpaths_world_corner_mm,
+      v3f toolpaths_extent_mm) = 0;
 
     /// \brief Called when the infill is about to be used for a brush, prior to path generation
     virtual void prepareInfill(int brush) = 0;
