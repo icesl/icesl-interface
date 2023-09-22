@@ -18,7 +18,13 @@ public:
   virtual ~SampleInfiller() override = default;
 
   void setNumSlices(int num) override;
-  void setWorldSpace(v3f world_corner_mm, v3f extent_mm) override;
+  void setCoordSpaces(
+    v3f processing_world_corner_mm,
+    v3f processing_extent_mm,
+    v3f tight_world_corner_mm,
+    v3f tight_extent_mm,
+    v3f toolpaths_world_corner_mm,
+    v3f toolpaths_extent_mm) override;
 
   // called once at start
   void prepareInfill(int brush) override;
