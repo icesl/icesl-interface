@@ -16,7 +16,7 @@ public:
 
   virtual ~SamplePostProcessing() override = default;
 
-  bool postProcessLayer(const int extruder, const int layerID, bool& spiral, const bool last_part, const v2i &start, std::vector<std::shared_ptr<IceSLInterface::IPath> > &_layer) override;
+  bool postProcessLayer(const int extruder, const int layerID, bool& spiral, const bool last_part, const v2i &start, std::vector<std::shared_ptr<IceSLInterface::IPath> > &_layer, const std::map<int, ClipperLib::Paths>& contours) override;
 
 private:
   float m_flow_multiplier_perimeter = 0;
