@@ -36,7 +36,7 @@ namespace IceSLInterface
     /// \param layer subset of layer to post-process (add paths + reorder existing paths)
     /// \param contours layer contours tagged by used brush
     /// \result true post-processing succesful
-    virtual bool postProcessLayer(const int extruder, const int layerID, bool& spiral, const bool last_part, const v2i& start, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer, const std::map<int, ClipperLib::Paths>& contours) = 0;
+    virtual bool postProcessLayer(const int extruder, const int layerID, bool& spiral, const bool last_part, const v2i& start, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer, const Array<std::map<int, ClipperLib::Paths>>& contours) = 0;
 
   protected:
 

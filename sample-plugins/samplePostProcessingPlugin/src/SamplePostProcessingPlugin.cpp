@@ -26,7 +26,7 @@ SamplePostProcessing::SamplePostProcessing(const IceSLInterface::EnumerableSetti
 
 // -----------------------------------------------
 
-bool SamplePostProcessing::postProcessLayer(const int, const int, bool&, const bool, const v2i&, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer, const std::map<int, ClipperLib::Paths>&)
+bool SamplePostProcessing::postProcessLayer(const int, const int, bool&, const bool, const v2i&, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer, const Array<std::map<int, ClipperLib::Paths>>&)
 {
   for (size_t i = 0; i < _layer.size(); i++) { // go through layer
     if (_layer[i]->getPathType() & PathType::e_Perimeter) { // only perimeters
