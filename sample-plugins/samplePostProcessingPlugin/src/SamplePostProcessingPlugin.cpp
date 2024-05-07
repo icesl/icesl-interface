@@ -47,7 +47,7 @@ bool SamplePostProcessing::postProcessLayer(const int, const int, bool&, const b
 bool SamplePostProcessingPlugin::addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   auto s = enumerable_settings.addSettingFromPlugin(
-    &m_FlowMultiplierPerimeter, &m_FlowMultiplierPerimeter_min, &m_FlowMultiplierPerimeter,
+    &m_FlowMultiplierPerimeter, &m_FlowMultiplierPerimeter_min, &m_FlowMultiplierPerimeter_max,
     "flow_multiplier_perimeter", "Flow multiplier (perimeters)", "Processing",
     "Specifies a flow multiplier that only applies for perimeters.",
     1000,
