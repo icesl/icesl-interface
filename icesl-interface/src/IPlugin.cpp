@@ -11,4 +11,4 @@
 
 #include "IPlugin.h"
 
-const std::string IceSLInterface::InterfaceVersion = "0.10";
+const std::string IceSLInterface::InterfaceVersion = "0.11";

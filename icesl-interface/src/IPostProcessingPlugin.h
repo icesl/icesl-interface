@@ -33,9 +33,19 @@ namespace IceSLInterface
     /// \param spiral if layer is to be spiralized
     /// \param last_part on few cases, IceSL separates in different parts an extruder's deposition paths in a layer (e.g., support structure). This boolean indicates if '_layers' is the last part of extruder 'extruder' in layer 'layerID'
     /// \param start starting point of paths in _layer
+    /// \param layer_height_mm altitude of the layer's bottom in mm, build space (starts at 0.0)
+    /// \param layer_thickness_mm thickness of the layer in mm
     /// \param layer subset of layer to post-process (add paths + reorder existing paths)
     /// \result true post-processing succesful
-    virtual bool postProcessLayer(const int extruder, const int layerID, bool& spiral, const bool last_part, const v2i& start, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer) = 0;
+    virtual bool postProcessLayer(
+      const int extruder,
+      const int layerID,
+      bool& spiral,
+      const bool last_part,
+      const v2i& start,
+      float layer_height_mm,
+      double layer_thickness_mm,
+      std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer) = 0;
 
   protected:
 
