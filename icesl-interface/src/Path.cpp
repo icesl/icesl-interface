@@ -36,9 +36,10 @@ Path::Path(IPath& iPath)
   std::vector<std::string> pervertexAttribs;
   iPath.getPerVertexAttributes(pervertexAttribs);
   for (const std::string& attrib : pervertexAttribs) {
+    int index = iPath.getPerVertexAttributeIndex(attrib);
+    if (index < 0) continue; // attribute could exist but have no values
     m_PerVertexAttribs[attrib] = static_cast<int>(m_PerVertexAttribValues.size());
     m_PerVertexAttribValues.push_back(std::vector<double>());
-    int index = iPath.getPerVertexAttributeIndex(attrib);
     ForIndex(i, iPath.getNumVertices()) {
       m_PerVertexAttribValues.back().push_back(0);
       iPath.getPerVertexAttributeValue(index, i, m_PerVertexAttribValues.back().back());
