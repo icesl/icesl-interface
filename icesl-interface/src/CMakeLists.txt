@@ -31,6 +31,7 @@ SET(ICESL_SOURCE
   IInfillerPlugin.h
   IMachineCodePlugin.h
   IPostProcessingPlugin.h
+  IPostProcessingContoursPlugin.h
   )
 
 ADD_LIBRARY(icesl_interface ${ICESL_SOURCE})
@@ -49,13 +50,5 @@ ENDIF()
 TARGET_LINK_LIBRARIES(icesl_interface
   clipper
 )
-
-IF(NOT EMSCRIPTEN)
-  IF(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    TARGET_LINK_LIBRARIES( icesl_interface
-      stdc++fs
-    )
-  ENDIF()
-ENDIF()
 
 SET_TARGET_PROPERTIES(icesl_interface PROPERTIES DEBUG_POSTFIX "-d")
