@@ -48,7 +48,7 @@ public:
 
   std::string name()    const override { return "SamplePostProcessingContoursPlugin"; }
   std::string author()  const override { return "Salim Perchy"; }
-  std::string comment() const override { return "Example of a post-processing plugin that applies a torsion angle to contours"; }
+  std::string comment() const override { return "Example of a post-processing plugin that applies a torsion angle to contours w.r.t. to an arbritrary Z-aligned axis"; }
 
   bool addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
@@ -61,6 +61,8 @@ public:
 private:
 
   std::vector<float> m_TorsionAngle;
-  float m_TorsionAngle_min = 0.0f;
-  float m_TorsionAngle_max = 360.0f;
+  float m_TorsionAngle_min = -360.0f;
+  float m_TorsionAngle_max =  360.0f;
+
+  std::vector<v2f> m_TorsionAxis;
 };
