@@ -117,9 +117,8 @@ bool SamplePostProcessingContoursPlugin::addPluginSettings(IceSLInterface::Enume
           enumerable_settings.getSettingByName(m_InternalName)->getValue(plugin_activated);
           return plugin_activated;
         },
-        IceSLInterface::EnumerableSettingsInterface::e_NoUnit,
-          IceSLInterface::EnumerableSettingsInterface::e_CanBePerLayer
-          );
+        IceSLInterface::EnumerableSettingsInterface::e_NoUnit
+      );
     if (s1 == nullptr) {
       return false;
     }
@@ -137,9 +136,8 @@ bool SamplePostProcessingContoursPlugin::addPluginSettings(IceSLInterface::Enume
           enumerable_settings.getSettingByName(m_InternalName)->getValue(plugin_activated);
           return plugin_activated;
         },
-        IceSLInterface::EnumerableSettingsInterface::e_NoUnit,
-          IceSLInterface::EnumerableSettingsInterface::e_CanBePerLayer
-          );
+        IceSLInterface::EnumerableSettingsInterface::e_NoUnit
+      );
     if (s2 == nullptr) {
       return false;
     }
