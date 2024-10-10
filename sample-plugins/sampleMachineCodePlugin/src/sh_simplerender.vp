@@ -1,14 +1,14 @@
 #ifdef Emscripten
-#version 300 es
+  attribute vec4 mvf_vertex;
+  varying   vec3 v_vertex;
 #else
 #version 430 core
+  in  vec4 mvf_vertex;
+  out vec3 v_vertex;
 #endif
 
 // SP 2018-03-26
-
-in  vec3 mvf_vertex;
-
-out vec4 color;
+// SL 2023-12-21: allowing WebGL1
 
 uniform mat4 t_matrix; // transformation matrix (i.e. view_matrix * model_matrix)
 uniform mat4 p_matrix; // projection matrix

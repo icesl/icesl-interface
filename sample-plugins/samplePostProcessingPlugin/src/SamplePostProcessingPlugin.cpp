@@ -26,7 +26,7 @@ SamplePostProcessing::SamplePostProcessing(const IceSLInterface::EnumerableSetti
 
 // -----------------------------------------------
 
-bool SamplePostProcessing::postProcessLayer(const int, const int, bool&, const bool, const v2i&, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer)
+bool SamplePostProcessing::postProcessLayer(const int, const int, bool&, const bool, const v2i&, float, double, std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer)
 {
   for (size_t i = 0; i < _layer.size(); i++) { // go through layer
     if (_layer[i]->getPathType() & PathType::e_Perimeter) { // only perimeters
@@ -47,7 +47,7 @@ bool SamplePostProcessing::postProcessLayer(const int, const int, bool&, const b
 bool SamplePostProcessingPlugin::addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings)
 {
   auto s = enumerable_settings.addSettingFromPlugin(
-    &m_FlowMultiplierPerimeter, &m_FlowMultiplierPerimeter_min, &m_FlowMultiplierPerimeter,
+    &m_FlowMultiplierPerimeter, &m_FlowMultiplierPerimeter_min, &m_FlowMultiplierPerimeter_max,
     "flow_multiplier_perimeter", "Flow multiplier (perimeters)", "Processing",
     "Specifies a flow multiplier that only applies for perimeters.",
     1000,
