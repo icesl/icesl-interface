@@ -43,10 +43,15 @@ bool SamplePostProcessingContours::postProcessContours(float contour_mm_per_int,
     for (auto& contour : contours_layer) {
       // contour brush
       int brush_contour = contour.first;
-      // get torsion angle at correct brush and height
+      // get parameters at correct brush and height
       const auto& torsion_angle_setting = m_EnumerableSettings->getSettingByName("torsion_angle_"  + std::to_string(brush_contour));
       const auto& torsion_angle_axis_x  = m_EnumerableSettings->getSettingByName("torsion_axis_x_" + std::to_string(brush_contour));
       const auto& torsion_angle_axis_y  = m_EnumerableSettings->getSettingByName("torsion_axis_y_" + std::to_string(brush_contour));
+      const auto& scale_factor_axis_x   = m_EnumerableSettings->getSettingByName("scale_factor_x_" + std::to_string(brush_contour));
+      const auto& scale_factor_axis_y   = m_EnumerableSettings->getSettingByName("scale_factor_y_" + std::to_string(brush_contour));
+      const auto& translate_distance_x  = m_EnumerableSettings->getSettingByName("translate_distance_x_" + std::to_string(brush_contour));
+      const auto& translate_distance_y  = m_EnumerableSettings->getSettingByName("translate_distance_y_" + std::to_string(brush_contour));
+      // torsion
       float axis_x, axis_y;
       torsion_angle_axis_x->getValue(axis_x);
       torsion_angle_axis_y->getValue(axis_y);
@@ -58,14 +63,47 @@ bool SamplePostProcessingContours::postProcessContours(float contour_mm_per_int,
       } else { // constant 
         torsion_angle_setting->getValue(torsion_angle);
       }
-      // torsion points in contour
+      // scale
+      float scale_x = 1.0f;
+      if (scale_factor_axis_x->isPerLayerSetting()) { // per-layer
+        float layer_height = static_cast<float>(layer_positions.at(layer).first); // bottom height of layer
+        scale_x = static_cast<float>(scale_factor_axis_x->valueAtHeight(layer_height));
+      } else { // constant 
+        scale_factor_axis_x->getValue(scale_x);
+      }
+      float scale_y = 1.0f;
+      if (scale_factor_axis_y->isPerLayerSetting()) { // per-layer
+        float layer_height = static_cast<float>(layer_positions.at(layer).first); // bottom height of layer
+        scale_y = static_cast<float>(scale_factor_axis_y->valueAtHeight(layer_height));
+      } else { // constant 
+        scale_factor_axis_y->getValue(scale_y);
+      }
+      // translate
+      float translation_x = 0.0f;
+      if (translate_distance_x->isPerLayerSetting()) { // per-layer
+        float layer_height = static_cast<float>(layer_positions.at(layer).first); // bottom height of layer
+        translation_x = static_cast<float>(translate_distance_x->valueAtHeight(layer_height));
+      } else { // constant 
+        translate_distance_x->getValue(translation_x);
+      }
+      float translation_y = 0.0f;
+      if (translate_distance_y->isPerLayerSetting()) { // per-layer
+        float layer_height = static_cast<float>(layer_positions.at(layer).first); // bottom height of layer
+        translation_y = static_cast<float>(translate_distance_y->valueAtHeight(layer_height));
+      } else { // constant 
+        translate_distance_y->getValue(translation_y);
+      }
+      
+      // transform points in contour
       std::vector<v2i> points_processed;
       for (const auto& point_contour : contour.second) {
         v2f point_pos(static_cast<float>(point_contour[0]), static_cast<float>(point_contour[1]));
         v2f point_centered = point_pos - contours_center;
         v4f point_rotated = LibSL::Math::quatf(v3f(0, 0, 1), static_cast<float>(M_PI) * torsion_angle / 180.0f) * v4f(point_centered[0], point_centered[1], 0.0f, 1.0f);
-        v2f point_rotated_uncentered = v2f(point_rotated[0], point_rotated[1]) + contours_center;
-        points_processed.emplace_back(static_cast<int>(point_rotated_uncentered[0]), static_cast<int>(point_rotated_uncentered[1]));
+        v2f point_scaled = v2f(point_rotated[0], point_rotated[1]) * v2f(scale_x, scale_y);
+        v2f point_translated = point_scaled + v2f(translation_x, translation_y);
+        v2f point_transformed_uncentered = v2f(point_rotated[0], point_rotated[1]) + contours_center;
+        points_processed.emplace_back(static_cast<int>(point_transformed_uncentered[0]), static_cast<int>(point_transformed_uncentered[1]));
       }
       contour.second = points_processed;
     }
@@ -80,7 +118,9 @@ bool SamplePostProcessingContoursPlugin::addPluginSettings(IceSLInterface::Enume
 {
   // allocate memory for settings
   m_TorsionAngle.resize(enumerable_settings.getNumberOfBrushes(), 0);
-  m_TorsionAxis.resize(enumerable_settings.getNumberOfBrushes(), 0);
+  m_TorsionAxis.resize(enumerable_settings.getNumberOfBrushes(), v2f(0));
+  m_ScaleFactor.resize(enumerable_settings.getNumberOfBrushes(), v2f(1));
+  m_TranslateDistance.resize(enumerable_settings.getNumberOfBrushes(), v2f(0));
   // generate per-brush torsion angle setting
   for (unsigned int b = 0; b < m_TorsionAngle.size(); ++b) {
     // torsion angle
@@ -139,6 +179,88 @@ bool SamplePostProcessingContoursPlugin::addPluginSettings(IceSLInterface::Enume
         IceSLInterface::EnumerableSettingsInterface::e_NoUnit
       );
     if (s2 == nullptr) {
+      return false;
+    }
+
+    // scale factor X
+    std::unique_ptr<IceSLInterface::EnumerableSettingsInterface::SettingInterface> s3=
+      enumerable_settings.addSettingFromPlugin(
+        &(m_ScaleFactor.at(b)[0]), &m_ScaleFactor_min, (float*)nullptr,
+        std::string("scale_factor_x_") + std::to_string(b),
+        std::string("Scale factor in X"),
+        "Brush_" + std::to_string(b),
+        "Scale factor in the X axis",
+        1003,
+        [this, &enumerable_settings]() -> bool {
+          bool plugin_activated;
+          enumerable_settings.getSettingByName(m_InternalName)->getValue(plugin_activated);
+          return plugin_activated;
+        },
+        IceSLInterface::EnumerableSettingsInterface::e_NoUnit,
+        IceSLInterface::EnumerableSettingsInterface::e_CanBePerLayer
+      );
+    if (s3 == nullptr) {
+      return false;
+    }
+    // scale factor Y
+    std::unique_ptr<IceSLInterface::EnumerableSettingsInterface::SettingInterface> s4 =
+      enumerable_settings.addSettingFromPlugin(
+        &(m_ScaleFactor.at(b)[1]), &m_ScaleFactor_min, (float*)nullptr,
+        std::string("scale_factor_y_") + std::to_string(b),
+        std::string("Scale factor in Y"),
+        "Brush_" + std::to_string(b),
+        "Scale factor in the Y axis",
+        1004,
+        [this, &enumerable_settings]() -> bool {
+          bool plugin_activated;
+          enumerable_settings.getSettingByName(m_InternalName)->getValue(plugin_activated);
+          return plugin_activated;
+        },
+        IceSLInterface::EnumerableSettingsInterface::e_NoUnit,
+        IceSLInterface::EnumerableSettingsInterface::e_CanBePerLayer
+      );
+    if (s4 == nullptr) {
+      return false;
+    }
+
+    // translation in X
+    std::unique_ptr<IceSLInterface::EnumerableSettingsInterface::SettingInterface> s5 =
+      enumerable_settings.addSettingFromPlugin(
+        &(m_TranslateDistance.at(b)[0]), (float*)nullptr, (float*)nullptr,
+        std::string("translate_distance_x_") + std::to_string(b),
+        std::string("Translation distance in X (mm)"),
+        "Brush_" + std::to_string(b),
+        "Translation distance in the X axis in millimeters.",
+        1005,
+        [this, &enumerable_settings]() -> bool {
+          bool plugin_activated;
+          enumerable_settings.getSettingByName(m_InternalName)->getValue(plugin_activated);
+          return plugin_activated;
+        },
+        IceSLInterface::EnumerableSettingsInterface::e_NoUnit,
+        IceSLInterface::EnumerableSettingsInterface::e_CanBePerLayer
+      );
+    if (s5 == nullptr) {
+      return false;
+    }
+    // translation in Y
+    std::unique_ptr<IceSLInterface::EnumerableSettingsInterface::SettingInterface> s6 =
+      enumerable_settings.addSettingFromPlugin(
+        &(m_TranslateDistance.at(b)[1]), (float*)nullptr, (float*)nullptr,
+        std::string("translate_distance_y_") + std::to_string(b),
+        std::string("Translation distance in Y (mm)"),
+        "Brush_" + std::to_string(b),
+        "Translation distance in the Y axis in millimeters.",
+        1006,
+        [this, &enumerable_settings]() -> bool {
+          bool plugin_activated;
+          enumerable_settings.getSettingByName(m_InternalName)->getValue(plugin_activated);
+          return plugin_activated;
+        },
+        IceSLInterface::EnumerableSettingsInterface::e_NoUnit,
+        IceSLInterface::EnumerableSettingsInterface::e_CanBePerLayer
+      );
+    if (s6 == nullptr) {
       return false;
     }
     

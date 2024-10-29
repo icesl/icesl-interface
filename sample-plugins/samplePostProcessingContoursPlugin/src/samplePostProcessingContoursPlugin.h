@@ -65,4 +65,11 @@ private:
   float m_TorsionAngle_max =  360.0f;
 
   std::vector<v2f> m_TorsionAxis;
+
+  std::vector<v2f> m_ScaleFactor;
+  float m_ScaleFactor_min = 0.0f;
+
+  std::vector<v2f> m_TranslateDistance;
+
+  
 };
