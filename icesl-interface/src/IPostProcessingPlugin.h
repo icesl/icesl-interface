@@ -35,7 +35,7 @@ namespace IceSLInterface
     /// \param start starting point of paths in _layer
     /// \param layer_height_mm altitude of the layer's bottom in mm, build space (starts at 0.0)
     /// \param layer_thickness_mm thickness of the layer in mm
-    /// \param paths_per_brush_per_slice paths of all layers discriminated by brush 
+    /// \param contours_per_brush_per_slice contours of all layers discriminated by brush 
     /// \param layer subset of layer to post-process (add paths + reorder existing paths)
     /// \result true post-processing succesful
     virtual bool postProcessLayer(
@@ -46,7 +46,7 @@ namespace IceSLInterface
       const v2i& start,
       float layer_height_mm,
       double layer_thickness_mm,
-      const std::vector<std::map<int, ClipperLib::Paths>>& paths_per_brush_per_slice,
+      const std::vector<std::map<int, ClipperLib::Paths>>& contours_per_brush_per_slice,
       std::vector<std::shared_ptr<IceSLInterface::IPath>>& _layer) = 0;
 
   protected:
