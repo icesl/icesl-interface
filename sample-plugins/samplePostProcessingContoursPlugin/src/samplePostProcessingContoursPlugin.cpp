@@ -227,7 +227,6 @@ bool SamplePostProcessingContoursPlugin::addPluginSettings(IceSLInterface::Enume
     if (s4 == nullptr) {
       return false;
     }
-
     
     // translation in X
     std::unique_ptr<IceSLInterface::EnumerableSettingsInterface::SettingInterface> s5 =

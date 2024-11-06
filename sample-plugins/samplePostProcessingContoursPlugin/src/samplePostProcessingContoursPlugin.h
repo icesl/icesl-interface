@@ -48,7 +48,7 @@ public:
 
   std::string name()    const override { return "SamplePostProcessingContoursPlugin"; }
   std::string author()  const override { return "Salim Perchy"; }
-  std::string comment() const override { return "Example of a post-processing plugin that applies a torsion angle to contours w.r.t. to an arbritrary Z-aligned axis"; }
+  std::string comment() const override { return "Example of a post-processing plugin that applies translation, scaling and a torsion angle w.r.t. to an arbritrary Z-aligned axis to contours"; }
 
   bool addPluginSettings(IceSLInterface::EnumerableSettingsInterface& enumerable_settings) override;
 
