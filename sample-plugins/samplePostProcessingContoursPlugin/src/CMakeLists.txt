@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 PROJECT(samplePostProcessingContoursPlugin)
 
 INCLUDE(PluginFPIC)
@@ -7,7 +7,13 @@ INCLUDE_DIRECTORIES(
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-ADD_LIBRARY(samplePostProcessingContoursPlugin MODULE
+IF(EMSCRIPTEN)
+  SET(LIBRARY_TYPE STATIC)
+ELSE(EMSCRIPTEN)
+  SET(LIBRARY_TYPE MODULE)
+ENDIF(EMSCRIPTEN)
+
+ADD_LIBRARY(samplePostProcessingContoursPlugin ${LIBRARY_TYPE}
   samplePostProcessingContoursPlugin.h
   samplePostProcessingContoursPlugin.cpp
 )
