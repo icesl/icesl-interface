@@ -1,10 +1,9 @@
 /*
- *  Copyright (c) 2023, Inria
- *  All rights reserved.
- *
  *  IceSL plugin interface
  *
- *  MFX Team
+ *  Copyright (c) 2026, Inria
+ *  See LICENSE file.
+ *
  */
 
 // SL 2020-09-07
